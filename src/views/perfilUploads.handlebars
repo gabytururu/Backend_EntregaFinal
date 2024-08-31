@@ -1,0 +1,24 @@
+{{>menuLoggedUser}}
+<div class="mainContainer">
+    <h1>Documentos de Usuario</h1>
+    <hr>
+    <h2>!Hola! {{user.first_name}}, vamos a actualizar tus datos en sistema</h2>
+    <h3>Por favor proporciona los documentos solicitados a continuación</h3>
+                      <p>{{user._id}}</p>
+    <form action="/api/users/{{user._id}}/documents" method="POST" enctype="multipart/form-data">
+        <div>
+            <input type="file" name="upload">
+            <select name="name">
+                <option value="profilePic" selected>Foto de Perfil</option>
+                <option value="identificacion">Identificacion</option>
+                <option value="compDomicilio">Comprobante de Domicilio</option>
+                <option value="edoCuenta">Estado de Cuenta</option>
+                <option value="producto">Foto de un producto tuyo</option>
+            </select>
+            <br>
+                
+        </div>   
+        <br>
+        <input type="submit" value="Grabar">
+    </form>
+</div>
