@@ -152,8 +152,12 @@ export class UsersController{
                     throw new Error("invalid Time Unit Specified")
             }    
 
-            const deleteOldConnections= await usersService.deleteOldConnectionsUsers(cutOffTiming)
+           // const deleteOldConnections= await usersService.deleteOldConnectionsUsers(cutOffTiming)
+           //---------------- PENDING> ENVIO DE EMAIL A CADA USUARIO -----------------------//
+            //TESTEAR YA QUE HAYA BORRAD:O TOODO EL TINGLADO DE USUARIOS QUE TENGO AHORITA Y PROBAR CON USERSCON MAILS REALES 
+            //-------------- PENDING > NO OLVIDAR.. VERIFICAR OCMO QUEDAN LOS ELEMENTOS LUEGO DE BORRARSE (EJ id, elemento>null? o simplemente borrando elemento gracias al cambio que hice en los modelos de cada cosa)
             res.setHeader('Content-type', 'application/json');
+            //return res.status(200).json({payload:deleteOldConnections})
             return res.status(200).json({payload:cutOffTiming})
 
         }catch(error){            

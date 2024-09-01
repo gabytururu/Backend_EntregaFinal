@@ -22,6 +22,7 @@ export const router=Router();
   router.get('/login',customAuth(["public"]),VistasController.renderLogin)
   router.get('/perfil',customAuth(["user","admin","premium"]),VistasController.renderPerfil)
   router.get('/perfilUploads',customAuth(["user","admin","premium"]),VistasController.renderPerfilUploads)
+  router.get('/admin',customAuth(["admin"]),VistasController.renderAdmin)
   router.get('/logout',customAuth(["public"]),VistasController.renderLogout)
   router.get('/purchase/:tid',customAuth(["user","admin","premium"]),VistasController.renderTicket)
   router.get('/password',customAuth(["public"]),VistasController.renderPassword)

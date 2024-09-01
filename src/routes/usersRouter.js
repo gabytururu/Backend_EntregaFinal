@@ -10,7 +10,7 @@ router.get('/:uid', customAuth(["admin"]), UsersController.getUserById)
 //pendiente METER EL AUTH a este
 router.post('/:uid/documents',customAuth(["premium"]), upload.single("upload"),UsersController.postUserDocuments)
 router.put('/premium/:uid', customAuth(["admin"]),UsersController.updateUserRol )
-router.delete('/',customAuth(["admin"]),UsersController.deleteOldConnectionUsers)
+router.delete('/admin',customAuth(["admin"]),UsersController.deleteOldConnectionUsers)
 
 // router.put('/:uid/:orderTicket',customAuth(["user","premium","admin"]),async(req,res)=>{
 //     const {uid,orderTicket} =req.params   

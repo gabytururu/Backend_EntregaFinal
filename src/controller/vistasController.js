@@ -193,6 +193,11 @@ export class VistasController{
         })
     }
 
+    static renderAdmin=async(req,res)=>{
+        res.setHeader('Content-type', 'text/html');
+        res.status(200).render('adminUsers')
+    }
+
     static renderLogout=async(req,res)=>{
         res.setHeader('Content-type', 'text/html');
         res.status(200).render('logout')
