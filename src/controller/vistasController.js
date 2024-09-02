@@ -193,6 +193,11 @@ export class VistasController{
         })
     }
 
+    static renderUploadSuccess=async(req,res)=>{
+         res.setHeader('Content-type', 'text/html');
+        res.status(200).render('perfilUploadSuccess')
+    }
+
     static renderAdmin=async(req,res)=>{
         res.setHeader('Content-type', 'text/html');
         res.status(200).render('adminUsers')

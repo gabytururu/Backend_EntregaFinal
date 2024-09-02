@@ -4,13 +4,17 @@
     <hr>
     <form id="getUser">
         <label for="userId">Id del Usuario:</label>
-        <input type="text" id="userId" name="userId" required>
-        <button type="submit">Ver Usuario</button>
+        <input type="text" id="userId" name="userId" placeholder="Ingresa Id# del Usuario" required>
+        <button type="submit">Elegir Usuario</button>
     </form>
     <div id="userContainer">
-        <div><p>Por el momento no hay Usuarios solicitados. </p></div>
-
+        <div><p>Aún no ha elegido ningún usuario. </p></div>
+    </div>
+    <div>
+        <button id="changeUserRol">Cambiar rol del usuario</button>
+        <button id="deleteUser">Borrar usuario</button>
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="/js/admin.js"></script>

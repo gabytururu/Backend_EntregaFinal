@@ -8,7 +8,7 @@ export const router=Router();
 router.get('/', customAuth(["admin"]), UsersController.getAllUsers)
 router.get('/:uid', customAuth(["admin"]), UsersController.getUserById)
 //pendiente METER EL AUTH a este
-router.post('/:uid/documents',customAuth(["premium"]), upload.single("upload"),UsersController.postUserDocuments)
+router.post('/:uid/documents',customAuth(["user","premium"]), upload.single("upload"),UsersController.postUserDocuments)
 router.put('/premium/:uid', customAuth(["admin"]),UsersController.updateUserRol )
 router.delete('/admin',customAuth(["admin"]),UsersController.deleteOldConnectionUsers)
 

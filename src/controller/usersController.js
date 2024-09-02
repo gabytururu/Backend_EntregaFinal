@@ -93,6 +93,12 @@ export class UsersController{
             if(["identificacion", "edoCuenta", "compDomicilio"].every(doc=>docStatusArray.includes(doc))){
                 await usersService.changeUserDocStatus({_id:uid},{docStatus:"complete"})
             } 
+
+            const acceptHeader = req.headers['accept']
+            if(acceptHeader?.includes('text/html')){
+                return res.status(301).redirect('/perfilUploadSuccess')
+            }
+
             const updatedDocsUser=await usersService.getUserById({_id:uid})
             return res.status(200).json({payload:updatedDocsUser})  
         } catch (error) {

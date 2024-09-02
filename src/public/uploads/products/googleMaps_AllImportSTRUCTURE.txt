@@ -1,0 +1,72 @@
+<img src="null">
+
+<div id="intro">
+</div>
+
+<div id="vivero1">
+
+</div>
+<div id="vivero2">
+
+</div>
+<div id="vivero3">
+
+</div>
+<div id="vivero4">
+
+</div>
+<div id="vivero5">
+
+</div>
+<div id="vivero6">
+
+</div>
+<div id="vivero7">
+
+</div>
+<div id="vivero8">
+
+</div>
+<div id="vivero9">
+
+</div>
+<div id="vivero10">
+
+</div>
+<div id="vivero11">
+
+</div>
+<div id="vivero12">
+
+</div>
+
+<div id="outro">
+</div>
+
+{intro[1]}
+
+{place1_data[1]}{place1_comments[1]}
+
+{place2_data[1]}{place2_comments[1]}
+
+{place3_data[1]}{place3_comments[1]}
+
+{place4_data[1]}{place4_comments[1]}
+
+{place5_data[1]}{place5_comments[1]}
+
+{place6_data[1]}{place6_comments[1]}
+
+{place7_data[1]}{place7_comments[1]}
+
+{place8_data[1]}{place8_comments[1]}
+
+{place9_data[1]}{place9_comments[1]}
+
+{place10_data[1]}{place10_comments[1]}
+
+{place11_data[1]}{place11_comments[1]}
+
+{place12_data[1]}{place12_comments[1]}
+
+{place13_data[1]}{place13_comments[1]}
