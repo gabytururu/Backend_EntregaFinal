@@ -32,8 +32,7 @@ export class CartsMongoDAO {
             {_id:cid, "products.pid":pid},
             {$inc:{"products.$.qty":qty}},
             {runValidators:true,returnDocument:'after'}
-        )
-        
+        )        
     }
 
     async update(cid,pid){

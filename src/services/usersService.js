@@ -9,6 +9,10 @@ class UsersService{
         return await this.dao.getAll()
     }
 
+    getUsersBy=async(cutOffTiming)=>{
+        return await this.dao.getAll({last_connection:{$lt:cutOffTiming}})
+    }
+
     getUserById= async(uid)=>{
         return await this.dao.getOneBy(uid)
     }
@@ -30,7 +34,9 @@ class UsersService{
     }
 
     removeProductFromOwner=async(uid,ownedProduct)=>{
-        return await this.dao.remove(uid,ownedProduct) 
+        console.log("el uid y typeof del servicio:",uid, typeof uid)
+        console.log("el ownedProduct y typeof del servicio:",ownedProduct, typeof ownedProduct)
+        return await this.dao.pull(uid,ownedProduct) 
     }
 
     changeUserRol=async(uid,updatedRol)=>{
@@ -45,7 +51,6 @@ class UsersService{
     }  
 
     addDocumentToUser=async(uid,document)=>{
-        console.log("el document que llega al SERVICE -->", document)
         return await this.dao.push(uid,document)
     }
 
@@ -53,9 +58,15 @@ class UsersService{
         return await this.dao.update(uid,status)
     }
 
-    deleteOldConnectionsUsers=async(cutOffTiming)=>{
-        return await this.dao.delete(cutOffTiming)
+    deleteSingleUser=async(uid)=>{
+        return await this.dao.deleteById(uid)
     }
+
+    deleteOldConnectionsUsers=async(cutOffTiming)=>{
+        return await this.dao.deleteMany(cutOffTiming)
+    }
+
+    
 }
 
  

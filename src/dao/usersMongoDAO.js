@@ -2,9 +2,9 @@ import { usersModel } from './models/usersModel.js'
 
 export class UsersMongoDAO{
 
-    async getAll(){
+    async getAll(propFilter={}){
        // return await usersModel.find().populate("cart").populate("productsOwned").populate("tickets").lean()
-        return await usersModel.find().lean()
+        return await usersModel.find(propFilter={}).lean()
     }
 
     async getOneBy(propFilter={}){
@@ -20,11 +20,9 @@ export class UsersMongoDAO{
         return newUserCreated.toJSON()
     }  
 
-    //new conditional added - (hasownprop reference) - testing pending on the other conditionals to verify none of them broke
     async push(uid,itemToUpdate){
         let query;
         //console.log se usa para debugear el cambio de itemstoupdate a objeto simple como lo hice con owned product y evitar el _id adicional en cada push de ticket y document
-        console.log('el item to update que llega a DAO-->',itemToUpdate)
         if(itemToUpdate.hasOwnProperty('purchaser')){
             let orderTicket = itemToUpdate._id
             //query = {$push:{tickets:{orderTicket}}}
@@ -46,10 +44,13 @@ export class UsersMongoDAO{
         )
     }
 
-    async remove(uid,ownedProduct){
+    async pull(uid,ownedProduct){
+        console.log("el uid y typeof del DAO", uid, typeof uid)
+        console.log("el ownedProduct y typeof del DAO", ownedProduct, typeof ownedProduct)
         return await usersModel.findByIdAndUpdate(
             uid,
-            {$pull:{productsOwned:{ownedProduct}}},
+           // {$pull:{productsOwned:{ownedProduct}}},
+            {$pull:{productsOwned:ownedProduct}}, //maybe without {} bc is a string?¡¡?
             {runValidators:true, returnDocument:'after'}
         )
     }
@@ -60,9 +61,12 @@ export class UsersMongoDAO{
         )
     }
 
-    async delete(cutOffTiming){
-        console.log("la last connection limit en el DAO DELETE:",cutOffTiming)
-       // return await usersModel.deleteMany({last_connection: {$lt:lastConnectionLimit}})
+    async deleteById(uid){
+        return await usersModel.findByIdAndDelete(uid)
+    }
+
+    async deleteMany(cutOffTiming){
+        return await usersModel.deleteMany({last_connection: {$lt:cutOffTiming}})
     }
 
 

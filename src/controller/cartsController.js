@@ -422,11 +422,9 @@ export class CartsController{
             console.log("el ticket created", ticketCreated) 
             //const ticketUserAssigned = await usersService.addTicketToUser(userId,ticketCreated._id)
             const ticketUserAssigned = await usersService.addTicketToUser(userId,ticketCreated)
-            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-            console.log("eluserEmail to regex test-->",userEmail)
-            //const resultRegexTest=emailRegex.test(userEmail)
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;            
             ticketCreated.hasEmail =emailRegex.test(userEmail)
-           // console.log('el regex test result-->',resultRegexTest)
+           
             if(emailRegex.test(userEmail)){
                 const emailSent = await sendEmail(
                     `BACKEND ECOMM TICKET ${config.GMAIL_EMAIL}`,
@@ -444,8 +442,6 @@ export class CartsController{
                     `              
                 )
                 req.logger.info("An email was sent to the client",emailSent)
-    
-                //nota... siempre acepta el envio -- como manejar el retorno posterior de DNS no encontrado?
                 if(emailSent.accepted.length>0){
                     req.logger.info("mail sent successfully - accepted by DNS")
                 }else{

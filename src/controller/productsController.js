@@ -6,6 +6,8 @@ import { ERROR_CODES } from "../utils/EErrors.js";
 import { reqLoggerDTO } from "../DTO/reqLoggerDTO.js";
 //import { UsersManagerMongo as UsersManager } from "../dao/usersManagerMONGO.js";
 import { usersService } from "../services/usersService.js";
+import { config } from "../config/config.js";
+import { sendEmail } from "../utils.js";
 
 export class ProductsController{
     static getProducts=async(req,res)=>{
@@ -197,9 +199,8 @@ export class ProductsController{
     static deleteProduct=async(req,res)=>{
         res.setHeader('Content-type', 'application/json');
         const {id} = req.params
-        const {email: userEmail, _id:userId, rol:userRol}= req.session.user        
-
-        req.logger.debug("el email: %s, el id: %s, el rol: %s",userEmail,userId,userRol)
+        const {email: userEmail, _id:userId, rol:userRol, nombre:userName}= req.session.user     
+        req.logger.debug("el email: %s, el id: %s, el rol: %s, el nombre: %s",userEmail,userId,userRol,userName)
 
         if(!isValidObjectId(id)){
             return res.status(400).json({error:`The ID# provided is not an accepted Id Format in MONGODB database. Please verify your ID# and try again`})
@@ -214,7 +215,7 @@ export class ProductsController{
             }            
             if(userRol === "premium" && prodToDelete.owner !== userEmail){
                 return res.status(404).json({
-                    error: `Invalid Credencials. User lacks authorization to delete this product.`,                
+                    error: `Invalid Credencials. User lacks authorization to delete this product. You must be the product owner or an admin user to proceed`,                
                 })           
             }            
         }catch(error){
@@ -228,7 +229,35 @@ export class ProductsController{
     
         try {     
             let deletedProduct = await productsService.deleteProduct(id)
-            if (userRol==="premium") await usersService.removeProductFromOwner(userId,deletedProduct._id)            
+            let productOwner;
+            if ((userRol==="premium" || userRol==="admin")&& deletedProduct.owner !=="admin") {
+                productOwner = await usersService.getUserByEmail({email:deletedProduct.owner})
+                await usersService.removeProductFromOwner(productOwner._id,deletedProduct._id)
+                const emailIssuance=await sendEmail(
+                    `BACKEND-ECOMM HELPDESK ${config.GMAIL_EMAIL}`,
+                    `${deletedProduct.owner}`,
+                    `El Producto #${id} ha sido eliminado`,
+                    `<h2>NUEVA POLÍTICA DE ELIMINACIÓN DE PRODUCTOS</h2>
+                     <p>Estimad@ ${productOwner.first_name},</p>
+                     <p>Debido a nuevas políticas internas, los productos en bodega e inventario podrán ser eliminados de nuestras listas siempre que cumplan con alguno de los siguientes motivos:</p><br>
+                     <ul>
+                        <li> Que no muestren rotación o movimiento durante más de 60 días(eliminación por la administración)</li>
+                        <li> Que sean eliminados directamente por el usuario (eliminación por el usuario dueño del producto)</li> 
+                     </ul>
+                     <br>
+                     <p>En cumplimiento a dichas políticas, te informamos que el producto "${deletedProduct.title}"con el id#${id} ha sido eliminado de nuestros registros.</p>
+                     <br>      
+                     <p>Si consideras que esto ha sido un error, por favor comunícate a nuestrá area de servicio a socios en el teléfono +42 586 7778889966 para exponer tu caso</p>    
+                     <br>      
+                     <h4>¡Gracias de por tu Comprensión y Preferencia! Te deseamos un excelente día</h4>
+                     `
+                    )
+                    if(emailIssuance.accepted.length>0){
+                        req.logger.info(`mail sent successfully to ${deletedProduct.owner}- accepted by DNS`)
+                    }else{
+                        req.logger.error(`Email sent to ${deletedProduct.owner} did not reach destination. Client mail DNS rejected the package`)
+                    }
+            }              
             return res.status(200).json({
                 payload:deletedProduct
             })

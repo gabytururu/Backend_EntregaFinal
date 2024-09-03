@@ -7,7 +7,7 @@ import __dirname from '../utils.js'
 import { reqLoggerDTO } from "../DTO/reqLoggerDTO.js";  
 
 export const errorHandler=async(error,req,res,next)=>{
-    console.log('error HANDLER EXECUTED')
+    console.log('ERROR HANDLER EXECUTED')
     if(!req.logger){
         console.log('req.logger is UNDEFINED from error handler')
     }
@@ -18,7 +18,8 @@ export const errorHandler=async(error,req,res,next)=>{
         date: new Date().toUTCString(),
         user: os.userInfo().username,
         terminal: os.hostname(),
-        details: error.cause
+        details: error.cause,
+        stack:error.stack
     }
 
     

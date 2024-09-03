@@ -24,6 +24,7 @@ class ProductsService{
     deleteProduct=async(id)=>{
         return await this.dao.delete(id)
     }
+
 }
 
 export const productsService=new ProductsService(new ProductsDAO())

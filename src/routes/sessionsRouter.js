@@ -71,7 +71,6 @@ router.post('/login',passportCallError("login"),async(req,res)=>{
 })
 
 router.get('/current', customAuth(["user","premium", "admin"]), async(req,res)=>{
-    console.log("ver el currentUser completo sin DTO.-->", req.session.user)
     const currentUserDTO = new userDTO(req.session.user)
     const acceptHeader = req.headers['accept']
     if(acceptHeader?.includes('text/html')){

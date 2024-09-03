@@ -7,10 +7,12 @@ export const router=Router();
 
 router.get('/', customAuth(["admin"]), UsersController.getAllUsers)
 router.get('/:uid', customAuth(["admin"]), UsersController.getUserById)
-//pendiente METER EL AUTH a este
 router.post('/:uid/documents',customAuth(["user","premium"]), upload.single("upload"),UsersController.postUserDocuments)
 router.put('/premium/:uid', customAuth(["admin"]),UsersController.updateUserRol )
-router.delete('/admin',customAuth(["admin"]),UsersController.deleteOldConnectionUsers)
+router.delete('/:uid',customAuth(["admin"]),UsersController.deleteSingleUser)
+router.delete('/admin/deleteOldConnections',customAuth(["admin"]),UsersController.deleteOldConnectionUsers)
+
+router.delete('/NoLastConnection/delete',customAuth(["admin"]),UsersController.deleteNoLastConnection)
 
 // router.put('/:uid/:orderTicket',customAuth(["user","premium","admin"]),async(req,res)=>{
 //     const {uid,orderTicket} =req.params   
