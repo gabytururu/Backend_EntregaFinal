@@ -22,7 +22,7 @@ describe("Backend Ecommerce Proyect: Sessions Router Test",function(){
             expect(response.body.error).to.equal('Missing credentials')
         })
         it("La ruta POST /api/sessions/login enviando password incorrecto, retorna Error 401", async function(){
-            let user={"email":"premium2@test.com", "password":"898989"}            
+            let user={"email":"gabymh4@gmail.com", "password":"898989"}            
             const response = await requester.post("/api/sessions/login").send(user)
             expect(response.status).to.equal(401)
             expect(response.body.error).includes('invalid password')
@@ -31,18 +31,18 @@ describe("Backend Ecommerce Proyect: Sessions Router Test",function(){
 
     describe("POST api/sessions/login", async function(){
         it("La ruta POST /api/sessions/login enviando datos correctos opera OK y retorna contenido", async function(){
-            let user={"email":"premium2@test.com", "password":"123456"}   
+            let user={"email":"gabymh4@gmail.com", "password":"123456"}   
             const response = await requester.post("/api/sessions/login").send(user)
             expect(response.status).to.equal(200)
             expect(response.body).has.property("payload")
             
         })
         it("La ruta POST /api/sessions/login enviando datos correctos opera OK y retorna payload de usuario con props que incluyen nombre, email, rol, y carrito", async function(){
-            let user={"email":"premium2@test.com", "password":"123456"}   
+            let user={"email":"gabymh4@gmail.com", "password":"123456"}   
             const response = await requester.post("/api/sessions/login").send(user)
             expect(response.status).to.equal(200)
             expect(response.body).has.property("payload")            
-            expect(response.body.payload).to.include.keys("nombre","email","rol","carrito")            
+            expect(response.body.payload).to.include.keys("fullName","email","rol","cart")            
         })        
     })
 
@@ -52,6 +52,33 @@ describe("Backend Ecommerce Proyect: Sessions Router Test",function(){
             expect(response.status).to.equal(200)
             expect(response.body).to.has.property("payload")
             expect(response.body.payload).to.include.keys("fullName","email","cart")
+        })
+    })
+
+    describe("POST api/sessions/registro", function(){
+
+        let newUser={
+            first_name:"Gabriela", 
+            last_name:"Sandbox", 
+            email:"gabriela.webportfolio@gmail.com",
+            age:40, 
+            password:123456,
+            rol:"premium"
+        }
+        
+        it("la ruta POST /api/sessions/registro sin enviar body retorna Error 401 por falta de credenciales",async function(){
+            const response=await requester.post("/api/sessions/registro")
+            expect(response.status).to.equal(401)
+            expect(response.body.error).to.include("Missing credentials")
+        })
+    })
+
+    describe("POST api/sessions/registro enviando body incompleto",function(){
+        it("la ruta POST /api/sessions/registro enviando body sin email o sin password retorna error 401",async function(){
+            
+            const response=await requester.post("/api/sessions/registro").send
+            expect(response.status).to.equal(401)
+            expect(response.body.error).to.include("Missing credentials")
         })
     })
 

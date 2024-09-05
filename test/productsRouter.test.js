@@ -63,11 +63,120 @@ describe("Backend Ecommerce Proyect: Products Router Test",function(){
             expect(status).to.equal(404)
         })
     })   
-    // describe("POST api/products/ -> sin usuario loggeado",function(){
-    //     it("La ruta POST api/carts sin usuario loggeado retorna error 401",async function(){
-    //         const 
-    //     })
-    // })  
+    describe("POST api/products/ -> sin user loggeado",function(){
+        it("La ruta POST api/products sin usuario loggeado retorna error 401",async function(){
+            let product={
+                "title": "Kit de cocina para outdoors - 18 piezas",
+                "description": "Kit de cocina de acero inoxidable para outdoors - 5 piezas incluye olla, sarten, cubiertos y utensilios resistentes al agua y de uso rudo",
+                "price": 40,
+                "code": 45810,
+                "stock": 22,
+                "status": true,
+                "category": "senderismo",
+                "thumbnails": "https://picsum.photos/200"
+            }
+            const response = await requester.post("/api/products/").send(product)
+            expect(response.status).to.equal(401)
+            expect(response.body.error).includes('Authentication')
+        })
+    })  
+    describe("POST api/products/ -> con user con privilegios loggeado", function(){
+        let product;
+        let user;
+        before(async function(){
+            product={
+                "title": "Kit de cocina para outdoors - 18 piezas",
+                "description": "Kit de cocina de acero inoxidable para outdoors - 5 piezas incluye olla, sarten, cubiertos y utensilios resistentes al agua y de uso rudo",
+                "price": 40,
+                "code": Math.floor(100000 + Math.random() * 100000),
+                "stock": 22,
+                "status": true,
+                "category": "senderismo",
+                "thumbnails": "https://picsum.photos/200"
+            }        
+            user={"email":"adminCoder@coder.com", "password":"adminCod3r123"}
+            try {
+                await requester.post("/api/sessions/login").send(user)
+            } catch (error) {
+                throw new Error(`Error attemting LOGIN BEFORE POST /api/products: ${error}`)
+            }           
+        })
+        after(async function(){
+            try {
+                //falta borrar todos los productos creados (mayores que 99999)
+                await requester.get("/api/sessions/logout")
+            } catch (error) {
+                throw new Error(`Error attempting LOGOUT in api/sessions/login Test:${error}`)
+            }
+        })
+
+        it("La ruta POST api/products con user correcto, sin objeto en body retorna error 400",async function(){
+            const response = await requester.post("/api/products/")
+            expect(response.status).to.equal(400)
+            expect(response.body.error).includes("Missing Arguments")
+        })
+        it("La ruta POST api/products con user correcto y body correcto retorna 200",async function(){
+            const response = await requester.post("/api/products").send(product)
+            expect(response.status).to.equal(200)
+            expect(response.body.status).to.equal("success")
+        })
+
+        it("La ruta POST api/products con user correcto y body correcto retorna un objeto con las props del producto creado",async function(){
+            let productB=product
+            productB.code=productB.code+1
+            const response = await requester.post("/api/products").send(productB)
+            expect(response.body.payload).to.exist
+            let productoCreado=response.body.payload
+            expect(productoCreado).to.be.an("object")
+            expect(productoCreado).to.include.all.keys("_id","title","description","price","code","stock","status","owner","category","thumbnails")            
+        })
+        it("La ruta POST api/products con user correcto pero body incompleto retorna error 400 por propiedades faltantes", async function(){
+            let productC=product
+            delete productC.code
+            delete productC.price
+            const response = await requester.post("/api/products").send(productC)
+            expect(response.status).to.equal(400)
+            expect(response.body.type).to.equal("Missing Properties")
+        }) 
+
+        
+    })
+    describe("POST api/products/ -> con user sin privilegios loggeado",function(){
+        let product;
+        let user;
+        before(async function(){
+            product={
+                "title": "Kit de cocina para outdoors - 18 piezas",
+                "description": "Kit de cocina de acero inoxidable para outdoors - 5 piezas incluye olla, sarten, cubiertos y utensilios resistentes al agua y de uso rudo",
+                "price": 40,
+                "code": Math.floor(100000 + Math.random() * 100000),
+                "stock": 22,
+                "status": true,
+                "category": "senderismo",
+                "thumbnails": "https://picsum.photos/200"
+            }        
+            user={"email":"coolmotivez@gmail.com", "password":"123456"}
+            try {
+                await requester.post("/api/sessions/login").send(user)
+            } catch (error) {
+                throw new Error(`Error attemting LOGIN BEFORE POST /api/products: ${error}`)
+            }           
+        })
+        after(async function(){
+            try {
+                //falta borrar todos los productos creados (mayores que 99999)
+                await requester.get("/api/sessions/logout")
+            } catch (error) {
+                throw new Error(`Error attempting LOGOUT in api/sessions/login Test:${error}`)
+            }
+        })
+
+        it("La ruta POST api/products con user sin privilegios, retorna error 403",async function(){
+            const response=await requester.post("/api/products").send(user)
+            expect(response.status).to.equal(403)
+            expect(response.body.type).to.include("Authorization")
+        })  
+    })
     
 })
 

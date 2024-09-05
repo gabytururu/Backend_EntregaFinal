@@ -18,11 +18,11 @@ describe("Backend Ecommerce Proyect: Carts Router Test",function(){
             expect(body.type).to.equal("Authentication failed")   
         })  
         it("La ruta GET /api/carts con usuario invalido retorna Error 403",async function(){
-            let user={"email":"pp@test.com", "password":"123456"}
+            let user={"email":"coolmotivez@gmail.com", "password":"123456"}
             try {
                 user = await requester.post("/api/sessions/login").send(user)
              } catch (error) {
-                 console.log(`Error attempting LOGIN in RouterCarts tests: ${error}`)
+                throw new Error(`Error attempting LOGIN in RouterCarts tests: ${error}`)
              }
             const {body,status}= await requester.get("/api/carts")
             expect(status).to.equal(403)
@@ -35,16 +35,16 @@ describe("Backend Ecommerce Proyect: Carts Router Test",function(){
         before(async function(){
             let admin={"email":"adminCoder@coder.com", "password":"adminCod3r123"}
             try {
-               user = await requester.post("/api/sessions/login").send(admin)            
+               await requester.post("/api/sessions/login").send(admin)            
             } catch (error) {
-                console.log(`Error attempting LOGIN in RouterCarts tests: ${error}`)
+                throw new Error(`Error attempting LOGIN in RouterCarts tests: ${error}`)
             }
         })
         after(async function(){
             try {
                 await requester.get("/api/sessions/logout")
             } catch (error) {
-                console.log(`Error attempting LOGOUT in RouterCarts Test`)
+                throw new Error(`Error attempting LOGOUT in RouterCarts Test`)
             }
         })
         it("La ruta GET /api/carts opera OK y retorna contenido",async function(){
@@ -77,18 +77,18 @@ describe("Backend Ecommerce Proyect: Carts Router Test",function(){
 
     describe("GET api/carts/:cid",function(){       
         before(async function(){
-            let user={"email":"premium2@test.com", "password":"123456"}
+            let user={"email":"coolmotivez@gmail.com", "password":"123456"}
             try {
-               user = await requester.post("/api/sessions/login").send(user)            
+               await requester.post("/api/sessions/login").send(user)            
             } catch (error) {
-                console.log(`Error attempting LOGIN in RouterCarts tests: ${error}`)
+                throw new Error(`Error attempting LOGIN in RouterCarts tests: ${error}`)
             }
         })
         after(async function(){
             try {
                 await requester.get("/api/sessions/logout")
             } catch (error) {
-                console.log(`Error attempting LOGOUT in RouterCarts Test`)
+                throw new Error(`Error attempting LOGOUT in RouterCarts Test`)
             }
         })
         it("La ruta GET /api/carts/:cid opera OK, y retorna 1 objeto con mínimo 2 propiedades",async function(){
@@ -111,6 +111,147 @@ describe("Backend Ecommerce Proyect: Carts Router Test",function(){
             expect(status).to.equal(404)
         })
     })
+
+    describe("PUT api/carts/:cid/product/:pid --> sin user loggeado", function(){       
+        const cartId="66d7975feb97f0110174c390"
+        const productId="663d204c60f80adeaa82bb64"
+
+        before(async function(){
+            try {
+                await requester.get("/api/sessions/logout")
+            } catch (error) {
+                throw new Error(`Error attempting LOGOUT in api/sessions/login Test:${error}`)
+            }
+        })
+
+        it("La ruta PUT api/carts/:cid/products/:pid/ sin usuario loggeado retorna error 401",async function(){
+            const response=await requester.put(`/api/carts/${cartId}/products/${productId}`)
+            expect(response.status).to.equal(401)
+            expect(response.body.error).includes("Authentication")
+        })        
+    })
+
+    describe("PUT api/carts/:cid/product/:pid --> con user correcto loggeado",function(){
+        const cartId="66d7975feb97f0110174c390"
+        const productId="663d204c60f80adeaa82bb64"
+        let premium={"email":"gabymh4@gmail.com", "password":"123456"}
+
+        before(async function(){
+            try {
+                await requester.post("/api/sessions/login").send(premium)
+            } catch (error) {
+                throw new Error(`Error attemting LOGIN BEFORE POST /api/products: ${error}`)
+            }       
+        })
+
+        after(async function(){
+            try {
+                await requester.get("/api/sessions/logout")
+            } catch (error) {
+                throw new Error(`Error attempting LOGOUT in api/sessions/login Test:${error}`)
+            }
+        })
+
+        it("La ruta PUT api/carts/:cid/product/:pid con user correcto y params correctos retorna 200",async function(){
+            const response = await requester.put(`/api/carts/${cartId}/products/${productId}`)
+            expect(response.status).to.equal(200)
+        })
+
+        it("La ruta PUT api/carts/:cid/product/:pid con user correcto y params correctos retorna 200 y retorna contenido con el objeto carrito",async function(){
+            const response = await requester.put(`/api/carts/${cartId}/products/${productId}`)
+            expect(response.status).to.equal(200)
+            expect(response.body).has.property("payload")
+            expect(response.body.payload).to.be.an("object")
+        })
+
+        
+        it("La ruta PUT api/carts/:cid/product/:pid con user correcto y params correctos retorna el objeto carrito con props y contenido correcto",async function(){
+            const response = await requester.put(`/api/carts/${cartId}/products/${productId}`)
+            let carrito=response.body.payload
+            expect(carrito).to.be.an("object")
+            expect(carrito).to.include.all.keys("_id","products")
+            expect(carrito.products).to.be.an("array")
+            carrito.products.forEach(prod => {
+                expect(prod).to.include.all.keys("pid", "qty");
+              });
+        })
+    })
+
+    describe("PUT api/carts/:cid/product/:pid --> con user sin privilegios loggeado",function(){
+        const cartId="66d7975feb97f0110174c390"
+        const productId="663d204c60f80adeaa82bb64"
+        let admin={"email":"adminCoder@coder.com", "password":"adminCod3r123"}
+
+        before(async function(){
+            try {
+                await requester.post("/api/sessions/login").send(admin)
+            } catch (error) {
+                throw new Error(`Error attemting LOGIN BEFORE POST /api/products: ${error}`)
+            }       
+        })
+
+        after(async function(){
+            try {
+                await requester.get("/api/sessions/logout")
+            } catch (error) {
+                throw new Error(`Error attempting LOGOUT in api/sessions/login Test:${error}`)
+            }
+        })
+
+        it("La ruta PUT api/carts/:cid/product/:pid con user incorrecto retorna 403",async function(){
+            const response = await requester.put(`/api/carts/${cartId}/products/${productId}`)
+            expect(response.status).to.equal(403)
+            expect(response.body.type).to.include("Authorization")
+        })      
+    })
+
+    describe("POST api/carts -->sin user loggeado",function(){
+        before(async function(){
+            try {
+                await requester.get("/api/sessions/logout")
+            } catch (error) {
+                throw new Error(`Error attempting LOGOUT in api/sessions/login Test:${error}`)
+            }
+        })
+        it("La ruta POST api/carts sin usuario loggeado retorna error 401",async function(){
+            const response = await requester.post("/api/carts/")
+            expect(response.status).to.equal(401)
+            expect(response.body.error).includes('Authentication')
+        })
+    })
+
+    describe("POST api/carts -->con user correcto loggeado",function(){
+        let premium={"email":"gabymh4@gmail.com", "password":"123456"}
+
+        before(async function(){
+            try {
+                await requester.post("/api/sessions/login").send(premium)
+            } catch (error) {
+                throw new Error(`Error attemting LOGIN BEFORE POST /api/products: ${error}`)
+            }       
+        })
+
+        after(async function(){
+            try {
+                await requester.get("/api/sessions/logout")
+            } catch (error) {
+                throw new Error(`Error attempting LOGOUT in api/sessions/login Test:${error}`)
+            }
+        })
+
+        it("La ruta POST api/carts con user loggeado opera OK", async function(){
+            const response=await requester.post("/api/carts")
+            expect(response.status).to.equal(200)
+        })
+
+        it("La ruta POST api/carts con user loggeado opera OK y retorna contenido correcto", async function(){
+            const response=await requester.post("/api/carts")
+            expect(response.body.payload).to.exist
+            const carrito=response.body.payload
+            expect(carrito).to.include.all.keys("_id","products")
+            expect(carrito.products).to.be.an("array")            
+        })
+    })    
 })
 
-  
+
