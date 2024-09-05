@@ -20,10 +20,11 @@ export class ProductsController{
         if (query.category) query.category = query.category;
         if (query.stock === "disponible") query.stock = { $gt: 0 };
        
-        try{            
+        try{          
             const {docs,totalPages,prevPage,nextPage,page,hasPrevPage,hasNextPage}= await productsService.getProducts(query,{pagina, limit, sort});
             return res.status(200).json({
                 status: 'success',
+                message:"products obtained successfully",
                 payload:docs,
                 totalPages,
                 prevPage,
@@ -62,7 +63,11 @@ export class ProductsController{
                     ERROR_CODES.RESOURCE_NOT_FOUND
                 ))               
             }              
-            return res.status(200).json({payload: matchingProduct})
+            return res.status(200).json({
+                status: 'success',
+                message:"product obtained successfully",
+                payload: matchingProduct
+            })
         }catch(error){
             req.logger.error('Server Error 500',new reqLoggerDTO(req,error)) 
             return next(error)
@@ -115,6 +120,8 @@ export class ProductsController{
             const newProduct = await productsService.postNewProduct(prodToPost)
             if (userRol==="premium") await usersService.addProductToOwner(userId,newProduct._id)          
             return res.status(200).json({
+                status:"success",
+                message:"new product posted successfully",
                 payload: newProduct
             })
         }catch(error){
@@ -181,12 +188,15 @@ export class ProductsController{
                     message: error.message
                 })
             }
-        }
-    
+        }    
     
         try {           
             let updatedProduct = await productsService.updateProduct(id,propsToUpdate)
-            return res.status(200).json({payload:updatedProduct})
+            return res.status(200).json({
+                status:"success",
+                message:"product updated successfully",
+                payload:updatedProduct
+            })
         } catch (error) {
             req.logger.error('Server Error 500',new reqLoggerDTO(req,error)) 
             return res.status(500).json({
@@ -224,8 +234,7 @@ export class ProductsController{
                 error:`Error 500 Server failed unexpectedly, please try again later`,
                 message: `${error.message}`
             })
-        }
-     
+        }     
     
         try {     
             let deletedProduct = await productsService.deleteProduct(id)
@@ -259,6 +268,8 @@ export class ProductsController{
                     }
             }              
             return res.status(200).json({
+                status:"success",
+                message:"product deleted successfully",
                 payload:deletedProduct
             })
         } catch (error) {

@@ -27,7 +27,11 @@ export class CartsController{
                     message: `No carts were found in our database, please try again later`
                 })
             }             
-            res.status(200).json({payload:carts})
+            res.status(200).json({
+                status:"success",
+                message:"carts obtained successfully",
+                payload:carts
+            })
         }catch(error){
             req.logger.error('Server Error 500',new reqLoggerDTO(req,error)) 
             return res.status(500).json({
@@ -53,7 +57,11 @@ export class CartsController{
                     message: `Resource not found: The Cart id provided (id#${cid}) does not exist in our database. Please verify and try again`
                 })
             }        
-            return res.status(200).json({payload: matchingCart})
+            return res.status(200).json({
+                status:"success",
+                message:"cart obtained successfully",
+                payload: matchingCart
+            })
         } catch (error) {
             req.logger.error('Server Error 500',new reqLoggerDTO(req,error)) 
             return res.status(500).json({
@@ -70,13 +78,15 @@ export class CartsController{
          
             const newCart = await cartsService.createNewCart()
             if(!newCart){
-                return res.status(404).json({
-                    error: `ERROR: resource not found - new cart not posted`,
-                    message: `Resource not found: the new cart could not be created. Please try again`
+                return res.status(500).json({
+                    error: `Error: unable to create new cart`,
+                    message: `The new cart could not be created. Please try again later`
                 })
             }
             return res.status(200).json({
-                newCart
+                status:"success",
+                message:"new cart created successfully",
+                payload:newCart
             })
         } catch (error) {
             req.logger.error('Server Error 500',new reqLoggerDTO(req,error)) 
@@ -87,7 +97,6 @@ export class CartsController{
         }
     }
 
-    // falta TESTEAR POST VALIDACION DE    if(pidIsValid.owner===userEmail){
     static replaceCartContent=async(req,res)=>{
         const {cid} = req.params;
         const newCartDetails = req.body
@@ -119,7 +128,7 @@ export class CartsController{
         if(!regexValidFormat.test(newCartDetailsString)){
             return res.status(400).json({
                 error: 'Invalid request : Format does not meet criteria',
-                message:  `Failed to replace the content in the cart id#${cid} due to invalid format request. Please make sure the products you submit are in a valid JSON format (Alike array with objects: [{...content}]).`
+                message:  `Failed to replace the content in the cart id#${cid} due to invalid format request. Please make sure the products you submit are in a valid JSON format (Alike array with objects, where each object must have 2 properties: pid and qty). Example: [{pid:string, qty:number}]).`
             });
         }
         
@@ -158,8 +167,7 @@ export class CartsController{
                 error:`Unexpected server error (500) - try again or contact support`,
                 message: error.message
             })
-        }
-     
+        }     
         
         try{
             const cartEditDetails = await cartsService.replaceProductsInCart(cid,newCartDetails)
@@ -170,7 +178,9 @@ export class CartsController{
                 })
             }
             return res.status(200).json({
-                cartEditDetails
+                status:"success",
+                message:"cart content was successfully replaced",
+                payload:cartEditDetails
             })
         }catch(error){  
             req.logger.error('Server Error 500',new reqLoggerDTO(req,error)) 
@@ -196,7 +206,6 @@ export class CartsController{
                 return res.status(400).json({error:`The Product ID# provided is not an accepted Id Format in MONGODB database. Please verify your Product ID# and try again`})
             }
         
-            // future improvement: see if can improve/simplify UX logic (eg. allow for null OR [] OR {} to result in +1 instead of error)
             const regexValidBodyFormat = /^\{.*\}$/
             const fullBody = JSON.stringify(req.body)
             if(!regexValidBodyFormat.test(fullBody,pid,cid)){ 
@@ -234,12 +243,11 @@ export class CartsController{
                 return next(CustomError.createError(
                     "Product was not added to Cart",
                     notProcessed(),
-                    `Premium Users cannot purchase their own products: Pid#${pid} Is owned by ${userEmail}, hence, it cannot be added to its cart `,
+                    `Users cannot buy their own products.Pid#${pid} Is owned by ${userEmail}.  Hence, product cannot be added to its own cart `,
                     ERROR_CODES.INTERNAL_SERVER_ERROR
                 ))
             }
 
-            //future improvement - seek for better method (change +1 for +N even on first iteration if desired) // needs qty to be updated properly
             const productAlreadyInCart = await cartsService.findProductInCart(cid,pid) 
             if(!productAlreadyInCart){
                const updatedCart =  await cartsService.addProductToCart(cid,pid)
@@ -263,12 +271,15 @@ export class CartsController{
                     ERROR_CODES.INTERNAL_SERVER_ERROR
                 ))
             }
-            return res.status(200).json({ updatedCart });
+            return res.status(200).json({ 
+                status:"success",
+                message:"product was successfully added to cart",
+                payload:updatedCart 
+            });
         }catch(error){
             req.logger.error('Server Error 500',new reqLoggerDTO(req,error)) 
             return next(error)
         }  
-  
     }
 
     static deleteAllProductsInCart=async(req,res)=>{
@@ -289,6 +300,8 @@ export class CartsController{
                 })
             }       
             return res.status(200).json({
+                status:"success",
+                message: "Cart emptied successfully. All products were deleted",
                 payload:deletedCart
             })
         } catch (error) {
@@ -353,6 +366,8 @@ export class CartsController{
                 })
             }
             return res.status(200).json({
+                status:"success",
+                message:"Product was successfully removed from cart",
                 payload:deletedProductInCart
             })
         } catch (error) {
@@ -372,27 +387,42 @@ export class CartsController{
         let purchasedProducts=[];
         
         if(!isValidObjectId(cid)){
-            return res.status(400).json({error:`The Cart ID# provided is not an accepted Id Format in MONGODB database. Please verify your Cart ID# and try again`})
-        }
-
-        if(cid !== userCart._id){
-            return res.status(400).json({error:`Purchase Cannot be completed: There is a missmatch between the cart Id referenced in your url (id#${cid}) and the one associated with the user trying to complete the purchase (id#${userCart._id}) Please verify and try again`})
+            return res.status(400).json({
+                error:`Error 400: bad request`,
+                message:`The Cart ID# provided is not an accepted Id Format in MONGODB database. Please verify your Cart ID# and try again`
+            })
         }
 
         try{
             const matchingCart = await cartsService.getCartById(cid) 
-            const cartId = matchingCart._id.toString()
-            //otro  loop de validacion igual pero que determine si el length de productos pedidos === length de productos remanentes .. si es igual significa que no hubo stock de nada y entonces debe rechazar la op. OR... UN LOOP QUE SOLO CHEQUE STOCK y genere tipo array nuevo con [good, goog, nostock, good, good] si no stock length === number of items entonces rechazo
-            // matchingCart.products.map(p=>{
-            //     //ver si hay stock xxxx quiza deba ir dentro de un mismo loop? repensar.
-            // })
-    
+            if(!matchingCart){
+                return res.status(404).json({
+                    error:`Error 404 Resource not found`,
+                    message: `No carts were found for the Cart id# provided (cid#${cid}). Please verify and try again`
+                })
+            }
+
+            if(matchingCart.products.length === 0){
+                res.setHeader('Content-type', 'application/json');
+                return res.status(422).json({
+                    error:`Error 422: Unprocessable entity: cart is empty`,
+                    message: `The cart its empty. Purchase orders cannot be completed for empty carts.`
+                })
+            }
+
+            if(cid !== userCart._id){
+                return res.status(403).json({
+                    error:`Error 403: action forbidden`,
+                    message:`You do not have permission to complete the purchase for this cart. Purchase orders can only be completed by the owner of the cart. The cart Id referenced in your url/param (id#${cid}) does not match the cart Id owned by the logged-in user trying to complete the purchase (id#${userCart._id}) Please verify and try again`
+                })
+            }
+      
+            const cartId = matchingCart._id.toString()    
             for(let p of matchingCart.products){
                 const productDetails= p.pid
                 const productOrderQty = p.qty
                 const productId = p.pid._id.toString()
-                const productStock=p.pid.stock
-            
+                const productStock=p.pid.stock            
 
                 if(productOrderQty<=productStock){
                     const newProductStock = productStock-productOrderQty  
@@ -405,6 +435,12 @@ export class CartsController{
     
             const ticketSubtotals = purchasedProducts.map(p=>p.subtotal)
             const ticketTotal = ticketSubtotals.reduce((ticketTotalAcc,subtotal)=>ticketTotalAcc+subtotal,0)
+            if(ticketTotal === 0){
+                return res.status(422).json({
+                    error:`Error 422: Unprocessable entity: Insufficient inventory`,
+                    message: `Order cannot be fullfilled. All product(s) allocated in your cart were backordered. Thus, the total order amount is $0.00. Purchase orders cannot be completed at $0.00 amount.`
+                })
+            }
             const remainingCart = await cartsService.getCartById(cartId)       
             const ticketDetails={
                 code: uniqueCode,
@@ -415,11 +451,8 @@ export class CartsController{
                 productsLeftInCart:remainingCart.products.map(p=>p.pid._id),
                 carts:userCart,
             }
-
-            console.log('los ticketDetails',ticketDetails)
             
             const ticketCreated = await ticketsService.createTicket(ticketDetails)   
-            console.log("el ticket created", ticketCreated) 
             //const ticketUserAssigned = await usersService.addTicketToUser(userId,ticketCreated._id)
             const ticketUserAssigned = await usersService.addTicketToUser(userId,ticketCreated)
             const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;            
@@ -448,7 +481,11 @@ export class CartsController{
                     req.logger.error("Email sent did not reach destination. Clients mail DNS rejected the package")
                 }
             }           
-            return res.status(200).json({payload:ticketCreated})
+            return res.status(200).json({
+                status:"success",
+                message:"Purchase order completed successfully: new ticket issued and sent to user",
+                payload:ticketCreated
+            })
         }catch(error){
             req.logger.error('Server Error 500',new reqLoggerDTO(req,error)) 
             return res.status(500).json({
@@ -458,17 +495,24 @@ export class CartsController{
         }        
     }
 
-
     static getPurchaseTicket=async(req,res)=>{
         res.setHeader('Content-type', 'application/json');
         const {cid,tid} =req.params
         const {cart: userCart, rol: userRol} = req.session.user
 
         if(!isValidObjectId(cid)){
-            return res.status(400).json({error:`The Cart ID# provided is not an accepted Id Format in MONGODB database. Please verify your Cart ID# and try again`})
+            return res.status(400).json({
+                error: `Error 400: Bad request`,
+                message:`The Cart ID# provided is not an accepted Id Format in MONGODB database. Please verify your Cart ID# and try again`
+            })
         }
 
-        
+        if(!isValidObjectId(tid)){
+            return res.status(400).json({
+                error: `Error 400: Bad request`,
+                message:`The Ticket ID# provided is not an accepted Id Format in MONGODB database. Please verify your Ticket ID# and try again`
+            })
+        }
 
         try {
             const matchingTicket = await ticketsService.getPurchaseTicket({_id:tid})
@@ -481,43 +525,47 @@ export class CartsController{
             const cartIdInTicket = matchingTicket.carts._id.toString()           
             if(cid !== cartIdInTicket){
                 res.setHeader('Content-type', 'application/json');
-                return res.status(404).json({
-                    error:`Error 404 Resource not found, please verify and try again`,
-                    message: `Cart id provided (#${cid}) is not associated to Ticket Id provided (#${tid}).`
-                })
-            }
-            if(cid !== userCart._id && userRol !== "admin"){
-                return res.status(403).json({
-                    error:`Ticket Cannot be retreived: Insufficient privileges`,
-                    message: `Previous Tickets can only be retreived/seen by the ticket owner (purchaser) or an admin.`
+                return res.status(400).json({
+                    error:`Error 404 Bad Request`,
+                    message: `Missmatch between CartId and TickedId. Cart id provided (#${cid}) is not associated to Ticket Id provided (#${tid}).`
                 })
             }
 
-            return res.status(200).json({payload: matchingTicket})
+            if(cid !== userCart._id && userRol !== "admin"){
+                return res.status(403).json({
+                    error:`Error 403: Operation Forbidden. Insufficient privileges`,
+                    message: `Ticket Cannot be retreived. Tickets can only be retreived and seen by the ticket owner (purchaser) or an admin.`
+                })
+            }
+
+            return res.status(200).json({
+                status:"success",
+                message:"Purchase Order Ticket was obtained successfully",
+                payload: matchingTicket
+            })
         } catch (error) {
             req.logger.error('Server Error 500',new reqLoggerDTO(req,error)) 
             return res.status(500).json({
                 error:`Error 500 Server failed unexpectedly, please try again later`,
                 message: `${error.message}`
             })
-        }
-      
+        }      
     }
 
     //temporary testing
-    static getAllPurchaseTickets=async(req,res)=>{
-        res.setHeader('Content-type', 'application/json');
-        try{
-            const allTickets= await ticketsService.getAllPurchaseTickets()
-            return res.status(200).json({payload:allTickets})
-        }catch(error){  
+    // static getAllPurchaseTickets=async(req,res)=>{
+    //     res.setHeader('Content-type', 'application/json');
+    //     try{
+    //         const allTickets= await ticketsService.getAllPurchaseTickets()
+    //         return res.status(200).json({payload:allTickets})
+    //     }catch(error){  
            
-            return res.status(500).json({
-                error:`Error 500 Server failed unexpectedly, please try again later`,
-                message: `${error.message}`
-            })
+    //         return res.status(500).json({
+    //             error:`Error 500 Server failed unexpectedly, please try again later`,
+    //             message: `${error.message}`
+    //         })
             
-        }
-    }
+    //     }
+    // }
     
 }

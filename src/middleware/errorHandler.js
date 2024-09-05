@@ -19,7 +19,7 @@ export const errorHandler=async(error,req,res,next)=>{
         user: os.userInfo().username,
         terminal: os.hostname(),
         details: error.cause,
-        stack:error.stack
+        //stack:error.stack
     }
 
     

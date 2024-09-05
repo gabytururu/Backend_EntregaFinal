@@ -248,7 +248,6 @@ export class VistasController{
             return res.status(301).redirect('/error')
         }   
         
-       // let usuario=jwt.verify(token,config.JWT_SECRET,(error,decoded)=>{
         jwt.verify(token,config.JWT_SECRET,(error,jwtDecodedUser)=>{
             if(error){
                 res.setHeader('Content-type', 'text/html');

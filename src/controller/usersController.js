@@ -6,13 +6,19 @@ import { cleanPath, sendEmail } from "../utils.js";
 import { isValidObjectId } from "mongoose";
 import { usersModel } from '../dao/models/usersModel.js'
 import { config } from "../config/config.js";
+import { userDTO } from "../DTO/userDTO.js";
 
 export class UsersController{
     static getAllUsers=async(req,res)=>{    
         res.setHeader('Content-type', 'application/json');
         try {
-            const allUsers = await usersService.getUsers()
-            return res.status(200).json({payload:allUsers})
+            const allUsers = await usersService.getUsers()            
+            const cleanUsers = allUsers.map(user=>new userDTO(user))
+            return res.status(200).json({
+                status:"success",
+                message:"Users obtained successfully",
+                payload:cleanUsers
+            })
         } catch (error) {
             return res.status(500).json({
                 error:`Error 500 Server failed unexpectedly, please try again later`,
@@ -26,7 +32,9 @@ export class UsersController{
         res.setHeader('Content-type', 'application/json');
 
         if(!isValidObjectId(uid)){
-            return res.status(400).json({error:`The ID# provided is not an accepted Id Format in MONGODB database. Please verify and try again`})
+            return res.status(400).json({
+                error:`Error 400: Bad request.`,
+                message:`The ID# provided is not an accepted Id Format in MONGODB database. Please verify and try again`})
         }
     
         try {
@@ -38,8 +46,12 @@ export class UsersController{
                     message: `Id# provided does not exist or is not associated to a user`
                 })
             }
-
-            return res.status(200).json({payload:singleUser})
+            const cleanUser = new userDTO(singleUser)
+            return res.status(200).json({
+                status:"success",
+                message:"User obtained successfully",
+                payload:cleanUser
+            })
         } catch (error) {
             return res.status(500).json({
                 error:`Error 500 Server failed unexpectedly, please try again later`,
@@ -50,27 +62,35 @@ export class UsersController{
 
     static postUserDocuments=async(req,res)=>{ 
         res.setHeader('Content-type', 'application/json');
-            const {uid} = req.params
-            const {name}= req.body
-            const file = req.file
-            if(!isValidObjectId(uid)){
-                return res.status(400).json({
-                    error:`Error 400 Invalid uid format`,
-                    message: `The format of the uid provided is no an accepted format in MONGODB`
-                })
-            }
-            if(!file){
-                return res.status(400).json({
-                    error:`Error 400 Missing documents:no file received`,
-                    message: `No file was received`
-                })
-            }    
-            if(!name){
-                return res.status(400).json({
-                    error:`Error 400 Missing data`,
-                    message: `Uploaded file received lacks mandatory data: no name`
-                })
-            } 
+        const {uid} = req.params
+        const {name}= req.body
+        const file = req.file
+        if(!isValidObjectId(uid)){
+            return res.status(400).json({
+                error:`Error 400 Bad request: Invalid uid format`,
+                message: `The format of the uid provided is no an accepted format in MONGODB`
+            })
+        }
+        if(!file){
+            return res.status(400).json({
+                error:`Error 400 Bad Request: Missing documents`,
+                message: `No files were received.`
+            })
+        }    
+        if(!name){
+            return res.status(400).json({
+                error:`Error 400 Bad Request: Missing data`,
+                message: `Uploaded file received lacks mandatory data: no name`
+            })
+        } 
+
+        const acceptedFileCategories = ['profilePic', 'identificacion', 'producto', 'edoCuenta', 'compDomicilio'];
+        if (!acceptedFileCategories.includes(name)) {
+            return res.status(400).json({
+                error: 'Error 400: Invalid file category name',
+                message: `The uploaded file category name '${name}' is not accepted. Only the following name categories are allowed: ${acceptedFileCategories.join(', ')}.`
+            });
+        }
 
         try {           
             let folder ='';
@@ -96,17 +116,19 @@ export class UsersController{
             let document={
                 name:name, 
                 reference:cleanPath(finalPath)
+            }        
+            await fs.promises.rename(tempPath,finalPath) 
+
+            const updatedUserDocuments= await usersService.addDocumentToUser(uid,document)  
+            if(!updatedUserDocuments){
+                return res.status(500).json({
+                    error:`Error 500: Unexpected process failure`,
+                    message: `Documents were not added to user. Please try again later`
+                })
             }
 
-        
-            await fs.promises.rename(tempPath,finalPath)       
-            const updatedUserDocuments= await usersService.addDocumentToUser(uid,document)  
-            let docStatusArray =[]
-           
-            updatedUserDocuments.documents.forEach(doc=>{
-                //docStatusArray.push(doc.document.name)
-                docStatusArray.push(doc.name)
-            })
+            let docStatusArray =[]           
+            updatedUserDocuments.documents.forEach(doc=>{docStatusArray.push(doc.name)})
             if(["identificacion", "edoCuenta", "compDomicilio"].every(doc=>docStatusArray.includes(doc))){
                 await usersService.changeUserDocStatus({_id:uid},{docStatus:"complete"})
             } 
@@ -117,10 +139,22 @@ export class UsersController{
             }
 
             const updatedDocsUser=await usersService.getUserById({_id:uid})
-            return res.status(200).json({payload:updatedDocsUser})  
+            if(!updatedDocsUser){
+                return res.status(500).json({
+                    error:`Error 500 Unexpected process failure`,
+                    message: `Updated user was not obtained. Please try again later.`
+                })
+            }
+
+            const cleanUpdatedDocsUser= new userDTO(updatedDocsUser)
+            return res.status(200).json({
+                status:"success",
+                message:"document was uploaded correctly and added to user",
+                payload:cleanUpdatedDocsUser
+            })  
         } catch (error) {
             return res.status(500).json({
-                error:`Error 500 Server failed unexpectedly, please try again later, SI ES AQUI`,
+                error:`Error 500 Server failed unexpectedly, please try again later,`,
                 message: `${error.message}`,
                 stack: error.stack
             })
@@ -131,23 +165,25 @@ export class UsersController{
         const {uid} =req.params
         res.setHeader('Content-type', 'application/json'); 
 
-        
         try{
             if(!isValidObjectId(uid)){
-                return res.status(400).json({error:`The ID# provided is not an accepted Id Format in MONGODB database. Please verify and try again`})
+                return res.status(400).json({
+                    error:`Errpr 400: Bad request`,
+                    message:`The ID# provided is not an accepted Id Format in MONGODB database. Please verify and try again`
+                })
             }
             const user= await usersService.getUserById({_id:uid})
             if(!user){
                 return res.status(404).json({
-                    error:`Error 400 Resource not found, operation cannot be completed`,
+                    error:`Error 404 Resource not found, operation cannot be completed`,
                     message: `The user id# provided was not found in our records`
                 })
             }
             if(user.rol==='user'){
                 if(user.docStatus !== "complete"){
-                   return res.status(400).json({
-                    error:`Error 400: missing information, petition cannot be complted`,
-                    message: `User with id#${uid} has not submitted all required documentation to be a premium user`
+                   return res.status(422).json({
+                    error:`Error 422: Unprocessable entity, Petition cannot be completed`,
+                    message: `Missing information: User with id#${uid} has not submitted all required documentation to be a premium user`
                    })
                 }
                 user.rol = 'premium'    
@@ -156,7 +192,18 @@ export class UsersController{
             }
     
             const updatedRolUser= await usersService.changeUserRol({_id:uid},{rol:user.rol})
-            return res.status(200).json({payload:updatedRolUser})
+            if(!updatedRolUser){
+                return res.status(500).json({
+                    error:`error 500: operation failed unexpectedly`,
+                    message:`User role could not be updated. Please try again later`
+                })
+            }
+            const cleanUpdatedRolUser = new userDTO(updatedRolUser)
+            return res.status(200).json({
+                status:"success",
+                message:"User role was updated successfully",
+                payload:cleanUpdatedRolUser
+            })
         }catch{      
             return res.status(500).json({
                 error:`Error 500 Server failed unexpectedly, please try again later`,
@@ -188,6 +235,13 @@ export class UsersController{
                 }               
             }
             const deletedUser = await usersService.deleteSingleUser(uid)
+            if (!deletedUser){
+                res.setHeader('Content-type', 'application/json');
+                return res.status(500).json({
+                    error:`Error 500 Unexpected process failure`,
+                    message: `Unable to delete user. Please try again later`
+                })
+            }
             const emailIssuance=await sendEmail(
                 `BACKEND-ECOMM HELPDESK ${config.GMAIL_EMAIL}`,
                 `${deletedUser.email}`,
@@ -208,7 +262,12 @@ export class UsersController{
             }else{
                 req.logger.error(`Email sent to ${deletedUser.email} did not reach destination. Client mail DNS rejected the package`)
             }
-            return res.status(200).json({payload:deletedUser})        
+            const cleanDeletedUser = new userDTO(deletedUser)
+            return res.status(200).json({
+                status:"success",
+                message:"User deleted successfully",
+                payload:cleanDeletedUser
+            })        
        } catch (error) {
             return res.status(500).json({
                 error:`Error 500 Server failed unexpectedly, please try again later`,
@@ -235,23 +294,27 @@ export class UsersController{
                 default:
                     throw new Error("invalid Time Unit Specified")
             }    
+
+            // --------------------- test following 2 and decide if redundant to elimintate first ------------------------//
             const usersToDelete = await usersService.getUsersBy(cutOffTiming)
             if(!usersToDelete){
                 res.setHeader('Content-type', 'application/json');
                 return res.status(404).json({
                     error:`Error 404 Resource not found`,
-                    message: `No users were found that match the specified criteri`
+                    message: `No users that match the specified criteria (last_Session before cut off timing) were found`
                 })
             }
             
             const deleteOldConnections= await usersService.deleteOldConnectionsUsers(cutOffTiming)
             if(deleteOldConnections.deletedCount === 0){
                 return res.status(200).json({               
-                    status:"success with no content (204)",
-                    message:"No users matched the last_session cutoff time criteria,hence no users were deleted.",
+                    status:"success 204",
+                    message:"The delete operation was processed successfully, but no users analyzed matched the last_session cutoff time criteria, hence no users were deleted.",
                     payload:deleteOldConnections
                 })
-            }
+            }            
+            // --------------------- END test following 2 and decide if redundant to elimintate first ------------------------//
+
             if(deleteOldConnections.deletedCount>0){
                 for(let user of usersToDelete){
                     let email = user.email
@@ -301,6 +364,8 @@ export class UsersController{
             })
         }       
     }
+
+    
 
     //borrar pre-entrega.. ruta de limpieza 
     static deleteNoLastConnection = async(req,res)=>{

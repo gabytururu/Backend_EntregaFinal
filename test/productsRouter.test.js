@@ -44,7 +44,7 @@ describe("Backend Ecommerce Proyect: Products Router Test",function(){
     })
     describe("GET api/products/:pid",function(){
         it("La ruta GET /api/products/:pid opera OK, y retorna 1 objeto con mínimo 9 propiedades",async function(){
-            let pid= "663d200860f80adeaa82bb5a"
+            let pid= "663d20d460f80adeaa82bb7f"
             const {body,status}=await requester.get(`/api/products/${pid}`)
             expect(status).to.equal(200)
             expect(body.payload).to.exist
@@ -63,6 +63,11 @@ describe("Backend Ecommerce Proyect: Products Router Test",function(){
             expect(status).to.equal(404)
         })
     })   
+    // describe("POST api/products/ -> sin usuario loggeado",function(){
+    //     it("La ruta POST api/carts sin usuario loggeado retorna error 401",async function(){
+    //         const 
+    //     })
+    // })  
     
 })
 

@@ -14,59 +14,38 @@ import bcrypt from 'bcrypt';
 //let usersManager = new UsersManager()
 export const router=Router();
 
-router.post('/registro',passportCallError("registro"),async(req,res)=>{
+router.post('/registro',passportCallError("registro"),customAuth(["public"]),async(req,res)=>{
     const newUser = {...req.user}
-    console.log("newUser en /registro", newUser)
-    console.log("req.session.user en /registro", req.session.user)
-    console.log("req.session en /registro", req.session)
-    console.log("req.user en /registro", req.user)
-
-    delete newUser.password
-
     const acceptHeader = req.headers['accept']
     if(acceptHeader?.includes('text/html')){
         return res.status(301).redirect('/login')
     }
 
+    const cleanUser = new userDTO(newUser)
     res.setHeader('Content-type', 'application/json');
     return res.status(201).json({
         status:"success",
         message:"Signup process was completed successfully",
-        payload:{
-            nombre:newUser.nombre,
-            email: newUser.email,
-            rol: newUser.rol,
-            carrito: newUser.cart,
-        }
+        payload:cleanUser
     })
 })
 
-router.post('/login',passportCallError("login"),async(req,res)=>{
+router.post('/login',passportCallError("login"),customAuth(["public"]),async(req,res)=>{
     const authenticatedUser ={...req.user}
     delete authenticatedUser.password
     req.session.user = authenticatedUser    
     
-    //**bug - pending to fix: headers on testing are different than on direct client DOM a/o POSTMAN**
-        const acceptHeader = req.headers['accept']
-        if(acceptHeader?.includes('text/html')){
-            return res.status(301).redirect('/products')
-        }
+    const acceptHeader = req.headers['accept']
+    if(acceptHeader?.includes('text/html')){
+        return res.status(301).redirect('/products')
+    }
 
+    const cleanAuthenticatedUser=new userDTO(authenticatedUser)
     res.setHeader('Content-type', 'application/json');
     return res.status(200).json({
         status: 'success',
         message: 'User login was completed successfully',
-        payload: {
-            id:authenticatedUser._id,
-            nombre: authenticatedUser.first_name,
-            apellido: authenticatedUser.last_name,
-            edad: authenticatedUser.age,
-            email: authenticatedUser.email,
-            rol:authenticatedUser.rol,
-            docStatus:authenticatedUser.docStatus,
-            carrito:authenticatedUser.cart,
-            last_connection: authenticatedUser.last_connection
-        }
+        payload: cleanAuthenticatedUser
     })      
 })
 
@@ -81,15 +60,7 @@ router.get('/current', customAuth(["user","premium", "admin"]), async(req,res)=>
     return res.status(200).json({
         status:'success',
         message: 'current user was obtained successfully',
-        payload:{
-            fullName:currentUserDTO.fullName,
-            email: currentUserDTO.email,
-            cart:currentUserDTO.cart,
-            rol:currentUserDTO.rol,
-            productsOwned: currentUserDTO.productsOwned,
-            tickets:currentUserDTO.tickets,
-            last_connection: currentUserDTO.last_connection || 'N/A'
-        }    
+        payload:currentUserDTO
     })
 })
 
@@ -111,7 +82,11 @@ router.get('/logout', customAuth(["user","admin","premium"]),async(req,res)=>{
     }
 
     res.setHeader('Content-type', 'application/json');
-    return res.status(200).json({payload:'Logout Exitoso'})
+    return res.status(200).json({
+        status: 'success',
+        message: 'User logged out successfully',
+        payload:'Logout Exitoso'
+    })
 })
 
 router.get('/error',(req,res)=>{
@@ -175,7 +150,7 @@ router.post('/password',customAuth(["public"]), async(req,res)=>{
             <p>PASO#4: Tu nuevo password habrá sido guardado y el sitio te redirigirá automáticamente a la pantalla de LOGIN para ingresar a la app</p>          
             <p>PASO#5: Ingresa nuevamente tus credenciales: tu EMAIL con tu NUEVO PASSWORD</p>          
             <br>
-            <h3>¡Listo! tu password nuevo ya está vigente</h3>
+            <h3>¡Listo! tu password nuevo ya estará vigente</h3>
             <h4>Recuerda que este link sólo es válido por 1hora. Si realizas este proceso después de ese período, este link ya no será válido y deberás emitir un nuevo correo y link de reestablecimiento</h4>
             <br>
             <h4>Gracias y Sigue comprando con nosotros!!</h4>
@@ -187,7 +162,6 @@ router.post('/password',customAuth(["public"]), async(req,res)=>{
 
         res.status(200).send({
             message: 'Email validated',
-            token: token,
             details: `Hemos enviado un email a tu correo los pasos y una liga para resetear tu email. Este correo tiene validez de 1hora. Por favor atiéndelo antes de que expire `
         });
     }catch(error){
@@ -198,12 +172,10 @@ router.post('/password',customAuth(["public"]), async(req,res)=>{
   
 })
 
-router.post('/resetPassword',async(req,res)=>{      
-
+router.post('/resetPassword',async(req,res)=>{     
     try {
         let {email, oldPassword, newPassword} = req.body
         let isMatch=await validatePasswordAsync(newPassword, oldPassword)
-        console.log({isMatch})
 
         if(isMatch){
             res.setHeader('Content-type', 'application/json');
@@ -221,8 +193,9 @@ router.post('/resetPassword',async(req,res)=>{
         
         res.setHeader('Content-type', 'application/json');
         return res.status(200).json({
-            payload: `Password changed successfully`,
-            message: `El password ha sido actualizado. Por favor dirígete a la sección de LOGIN e ingresa con tu nuevo password`           
+            status: `success`,
+            message: `El password ha sido actualizado. Por favor dirígete a la sección de LOGIN e ingresa con tu nuevo password`,           
+            payload: `Password actualizado correctamente`
         })
     } catch (error) {
         res.setHeader('Content-type', 'application/json');

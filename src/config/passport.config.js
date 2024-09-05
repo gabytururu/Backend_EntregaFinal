@@ -8,6 +8,7 @@ import { hashPassword, validatePassword } from "../utils.js";
 import { reqLoggerDTO } from "../DTO/reqLoggerDTO.js";
 import { appLoggerDTO } from "../DTO/appLoggerDTO.js";
 import { appLogger } from "../utils/logger.js";
+import { userDTO } from "../DTO/userDTO.js";
 
 const usersManager = new UsersManager()
 
@@ -23,21 +24,20 @@ export const initPassport=()=>{
             },
             async(req,username,password,done)=>{
                 try {
-                    //const {nombre} = req.body
                     const {first_name, last_name, age, rol} = req.body
                     if(!first_name){ 
                         appLogger.info('REGISTRO FAILED: Failed to complete signup due to missing name.Please make sure all mandatory fields(*)are completed to proceed with signup') 
-                        return done(null,false, {message: `Signup failed: Must complete all signup required data to access`})
+                        return done(null,false, {message: `Signup failed: Missing first_name. Must complete all signup required data to access`})
                     }
 
                     if(!last_name){  
                         appLogger.info('REGISTRO FAILED: Failed to complete signup due to missing lastname.Please make sure all mandatory fields(*)are completed to proceed with signup') 
-                        return done(null,false, {message: `Signup failed: Must complete all signup required data to access`})
+                        return done(null,false, {message: `Signup failed: Missing last_name. Must complete all signup required data to access`})
                     }
 
                     if(!age){  
                         appLogger.info('REGISTRO FAILED: Failed to complete signup due to missing age.Please make sure all mandatory fields(*)are completed to proceed with signup') 
-                        return done(null,false, {message: `Signup failed: Must complete all signup required data to access`})
+                        return done(null,false, {message: `Signup failed: Missing Age. Must complete all signup required data to access`})
                     }
                 
                     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -52,12 +52,10 @@ export const initPassport=()=>{
                         return done(null,false, {message: `Signup failed: Email already exists and cannot be duplicated - please try again.`})
                     }
 
-                    //missing validation fo proper postmanClient body format?? eg, {}
-                   
                     password = hashPassword(password)                  
                     const newCart = await cartsService.createNewCart()
                     const newUser = await usersManager.createUser({first_name, last_name, age,email:username,password,rol,cart:newCart._id})
-                    
+
                     return done(null, newUser)
 
                 } catch (error) {
@@ -87,7 +85,7 @@ export const initPassport=()=>{
                         done(null,false, {message: `Login failed - email format is not valid - please verify and try again`})
                     }
 
-                    if(username=="adminCoder@coder.com" && password=="adminCod3r123"){
+                    if(username==config.ADMIN_CODER_USERNAME && password==config.ADMIN_CODER_PASSWORD){
                         const userIsManager={
                             _id:'adminId',
                             nombre:'Manager Session',
