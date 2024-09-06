@@ -9,22 +9,38 @@
     <div class="titles">
         <h1>Bienvenid@ a la Tienda {{userProfile.first_name}}</h1>
         <div class="profile">
-            {{#unless userProfile.isPublic}}
+             {{#if userProfile.isUser}}
                 <p>Nombre: {{userProfile.first_name}}</p>
                 <p>Apellido: {{userProfile.last_name}}</p>
                 <p>edad: {{userProfile.age}}</p>
                 <p>email: {{userProfile.email}}</p>
-                <p>Rol: {{userProfile.rol}}</p>
+                <p>Rol: {{userProfile.rol}}</p>       
                 <p> Id# de tu Carrito: {{userProfile.cart._id}}</p>
-            {{/unless}}
+            {{/if}}
+            {{#if userProfile.isPremium}}
+                <p>Nombre: {{userProfile.first_name}}</p>
+                <p>Apellido: {{userProfile.last_name}}</p>
+                <p>edad: {{userProfile.age}}</p>
+                <p>email: {{userProfile.email}}</p>
+                <p>Rol: {{userProfile.rol}}</p>       
+                <p> Id# de tu Carrito: {{userProfile.cart._id}}</p>
+            {{/if}}
+            {{#if userProfile.isAdmin}}
+                <p>Nombre: {{userProfile.nombre}}</p>
+                <p>email: {{userProfile.email}}</p>
+                <p>Rol: {{userProfile.rol}}</p>       
+            {{/if}}
             {{#if userProfile.isPublic}}
                 <h2>¡Hola Visitante!</h2>
                 <p>Requerda que debes registrate/loggearte para poder comprar</p>
             {{/if}}
             {{#if userProfile.isUser}}
+                <a href="/carts/{{userProfile.cart._id}}" class="userCarts" id="userCart" data-user-cid="{{userProfile.cart._id}}">Ver tu Carrito</a>              
+            {{/if}}
+            {{#if userProfile.isPremium}}
                 <a href="/carts/{{userProfile.cart._id}}" class="userCarts" id="userCart" data-user-cid="{{userProfile.cart._id}}">Ver tu Carrito</a>
             {{/if}}
-             {{#if userProfile.isAdmin}}
+            {{#if userProfile.isAdmin}}
                 <a href="/carts" class="userCarts" id="allCarts">Ver todos los Carritos</a>
                 <a href="/admin" class="adminUser" id="adminUser">Administrar Usuarios</a>
             {{/if}}           
@@ -55,9 +71,12 @@
                     </div>
                     <div class="buybuttonContainer">
                             <button class="checkDetails" onClick="checkProductDetails('{{_id}}')">Ver Detalles</button>
-                            {{#unless ../userProfile.isPublic}}
-                                <button class="buyButton" onClick="addProdToCart('{{_id}}')">comprar</button> 
-                            {{/unless}}                   
+                            {{#if ../userProfile.isUser}}
+                                <button class="buyButton" onClick="addProdToCart('{{_id}}')">Agregar al Carrito</button> 
+                            {{/if}}
+                            {{#if ../userProfile.isPremium}}
+                                <button class="buyButton" onClick="addProdToCart('{{_id}}')">Agregar al Carrito</button> 
+                            {{/if}}
                     </div>
                 </div>
             {{/each}}

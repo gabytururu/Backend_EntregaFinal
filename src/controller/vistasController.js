@@ -48,6 +48,7 @@ export class VistasController{
         if(!userProfile) {userProfile = {rol:"public"}}
         userProfile.isUser = userProfile.rol === 'user';
         userProfile.isAdmin = userProfile.rol === 'admin';    
+        userProfile.isPremium = userProfile.rol==='premium'
         userProfile.isPublic= userProfile.rol === 'public';
        
         if (!pagina) pagina=1;  
@@ -210,7 +211,6 @@ export class VistasController{
 
     static renderTicket=async(req,res)=>{
         const {tid} =req.params
-
         try{
             const matchingTicket = await ticketsService.getPurchaseTicket({_id:tid})
             if(!matchingTicket){
@@ -221,6 +221,9 @@ export class VistasController{
                     message: `${error.message}`
                 })
             }
+            // console.log("el matching ticket post service call: ", matchingTicket)
+            // matchingTicket.hasEmail = matchingTicket.hasEmail ==="yes"
+            // console.log("el matching ticket post has email:", matchingTicket)
             res.setHeader('Content-type', 'text/html');
             res.status(200).render('ticket',{
                 sessionData: req.session,

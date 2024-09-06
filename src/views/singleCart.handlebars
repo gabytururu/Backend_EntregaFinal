@@ -10,14 +10,19 @@
             <h2>El Carrito: {{matchingCart._id}}</h2>
             <div class="resultsliContainer">
                 {{#each matchingCart.products}}
+                <div class="carritoSemiCart">
                     <p><strong>{{pid.title}}</strong></p>
                     <p>{{pid.description}}</p>
+                    <p>{{this._id}}</p>
                     <p><strong>Price:</strong> {{pid.price}}</p>
                     <p><strong>Code:</strong> {{pid.code}}</p>
                     <p><strong>Category:</strong> {{pid.category}}</p>
                     <p><strong>Stock:</strong> {{pid.stock}}</p>
                     <p><strong>Quantity:</strong> {{qty}}</p>
                     <hr class="line"> 
+                    <button onClick="quitarDelCarrito('{{../matchingCart._id}}','{{pid._id}}')"><small><i>Quitar de Mi carrito</i></small></button>
+                    <hr class="line">
+                </div>
                 {{/each}}
             </div>
             <div class="finalizePurchase">

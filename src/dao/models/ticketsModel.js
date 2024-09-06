@@ -15,7 +15,7 @@ const ticketsSchema = new mongoose.Schema(
         productsPurchased: Array,
         productsLeftInCart:Array
     },
-    {timestamps:true,strict: true}
+    {timestamps:true,strict: false}
 )
 
 export const ticketsModel = mongoose.model(

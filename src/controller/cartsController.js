@@ -446,17 +446,21 @@ export class CartsController{
                 code: uniqueCode,
                 purchaser:userId,
                 purchaserContact: userEmail?userEmail:`El usuario ${userId} no tiene correo registrado`,
+                hasEmail:userEmail?"yes":"no",
                 amount: ticketTotal,
                 productsPurchased:purchasedProducts,
                 productsLeftInCart:remainingCart.products.map(p=>p.pid._id),
                 carts:userCart,
             }
+            console.log("los ticket details a como se va DEL CONTROLLER la DB:", ticketDetails)
             
-            const ticketCreated = await ticketsService.createTicket(ticketDetails)   
+            const ticketCreated = await ticketsService.createTicket(ticketDetails)  
+            console.log("el ticket a como es creado: ", ticketCreated) 
             //const ticketUserAssigned = await usersService.addTicketToUser(userId,ticketCreated._id)
             const ticketUserAssigned = await usersService.addTicketToUser(userId,ticketCreated)
             const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;            
             ticketCreated.hasEmail =emailRegex.test(userEmail)
+            console.log("respuesta ticketCreated has email: ", ticketCreated.hasEmail)
            
             if(emailRegex.test(userEmail)){
                 const emailSent = await sendEmail(
@@ -550,22 +554,5 @@ export class CartsController{
                 message: `${error.message}`
             })
         }      
-    }
-
-    //temporary testing
-    // static getAllPurchaseTickets=async(req,res)=>{
-    //     res.setHeader('Content-type', 'application/json');
-    //     try{
-    //         const allTickets= await ticketsService.getAllPurchaseTickets()
-    //         return res.status(200).json({payload:allTickets})
-    //     }catch(error){  
-           
-    //         return res.status(500).json({
-    //             error:`Error 500 Server failed unexpectedly, please try again later`,
-    //             message: `${error.message}`
-    //         })
-            
-    //     }
-    // }
-    
+    }    
 }

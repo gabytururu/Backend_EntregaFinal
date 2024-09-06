@@ -96,14 +96,25 @@ h2{
     border-bottom:solid 5px #000080;
     justify-content: center;
 }
-
 .resultsliContainer{
     display:flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     font-family: 'Gill Sans', sans-serif;
+    /* background-color: red; */
 }
+
+.carritoSemiCart{
+    background-color:#bdecff;
+    margin-bottom: 20px;
+    padding:10px;
+    border-radius:5px;
+    text-align: center;
+    
+}
+
+
 
 .buybuttonContainer{
     display: flex;
@@ -125,10 +136,12 @@ h2{
 
 .line{
     height:1px;
-    width: 35%;
+    width: 85%;
     color:#000080;
     border-style: dashed
 }
+
+
 
  /* ------------ CHAT ------------ */
 .mensajesInput {

@@ -27,6 +27,7 @@
                 <div>            
                     <p><strong>Total:</strong> ${{ticketDetails.amount}} USD</p>
                 </div> 
+                {{#if ticketDetails.carts.products}}             
                 <div>           
                     <p><small><i>*Nota: Los siguientes productos no fueron procesados por falta de stock, permanecerá en tu carrito por si deseas adquirirlo más adelante:</i></small></p>
                     <ul>
@@ -35,18 +36,15 @@
                         {{/each}}
                     </ul>
                 </div>  
+                {{/if}}
                 <div>
-                    {{#if ticketCreated.hasEmail}}
+                    {{#if ticketDetails.hasEmail}}
                         <small>*Te hemos enviado un email con las principales referencias de esta compra*</small>
                     {{/if}}
-                    {{#unless ticketCreated.hasEmail}}
+                    {{#unless ticketDetails.hasEmail}}
                         <small>*No contamos con tu email en nuestros registros por lo que no ha sido posible enviarte un email con el ticket de compra. Si deseas que te enviemos futuros tickets, por favor actualiza tus datos y proporciona un correo electrónico válido*</small>
                     {{/unless}}
-                    <small>*Te hemos enviado un email con las principales referencias de esta compra*</small>
                 </div>              
-                {{!-- <div class="finalizePurchase">
-                    <button class="sendEmail" onClick="sendEmail('{{ticketDetails}}')" data-ticket-details="{{ticketDetails}}">Envia ticket a tu @email</button>
-                </div> --}}
             </div>           
         </div>        
     </div>  

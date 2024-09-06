@@ -7,10 +7,10 @@
 <div class="mainContainer">
     <div class="titles">
         <h1>Detalles del Producto</h1>
-         {{#if userProfile.isPublic}}
-            <h2>¡Hola Visitante!</h2>
-            <p>Requerda que debes registrate/loggearte para poder comprar</p>
-           {{/if}}
+            {{#if userProfile.isPublic}}
+                <h2>¡Hola Visitante!</h2>
+                <p>Requerda que debes registrate/loggearte para poder comprar</p>
+            {{/if}}
     </div>
 </div>
     <div class="productsContainer">
@@ -26,12 +26,23 @@
                     <p><strong>Precio:</strong> ${{matchingProduct.price}}</p>
                 </div>
                 <div class="buybuttonContainer">
-                    {{#unless userProfile.isPublic}}
-                        <button class="buyButton" onClick="finalizePurchase('{{matchingProduct._id}}')" data-user-cid="{{userProfile.cart._id}}">comprar</button>    
-                    {{/unless}}    
+                    {{#if userProfile.isUser}}
+                        <button class="buyButton" onClick="finalizePurchase('{{matchingProduct._id}}')" data-user-cid="{{userProfile.cart._id}}">Agregar al Carrito</button>   
+                        <button class="buyButton" onClick="window.location.href='/carts/{{userProfile.cart._id}}'">Ver mi carrito</button>     
+                    {{/if}}    
+                    {{#if userProfile.isPremium}}
+                        <button class="buyButton" onClick="finalizePurchase('{{matchingProduct._id}}')" data-user-cid="{{userProfile.cart._id}}">Agregar al Carrito</button>    
+                        <button class="buyButton" onClick="window.location.href='/carts/{{userProfile.cart._id}}'">Ver mi carrito</button>    
+                    {{/if}}    
+                    {{#if userProfile.isAdmin}}
+                        <button class="buyButton" onClick="window.history.back()">Volver a Pag. Anterior</button>    
+                    {{/if}}    
+                    {{#if userProfile.isPublic}}
+                        <button class="buyButton" onClick="window.history.back()">Volver a Pag. Anterior</button>    
+                    {{/if}}    
                 </div>
             </div>
-        </div>
+        </div>            
     </div>
 </div>
 
