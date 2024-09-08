@@ -16,5 +16,3 @@ router.post('/:cid/purchase',customAuth(["user","premium"]),CartsController.comp
 router.get('/:cid/purchase/:tid',customAuth(["user","admin","premium"]),CartsController.getPurchaseTicket)
 
 
-// router.get('/purchase/allTickets',customAuth(["admin"]),CartsController.getAllPurchaseTickets)
-

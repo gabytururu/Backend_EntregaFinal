@@ -1,12 +1,11 @@
 import { describe, it, afterEach, before } from "mocha";
 import { expect } from "chai";
 import supertest from "supertest-session";
-import mongoose, {isValidObjectId} from "mongoose";
+import {isValidObjectId} from "mongoose";
 import { connectionDB } from "./helpers/dbConnection.js";
 
 
 const requester=supertest("http://localhost:8080")
-//npx mocha ./test/cartsRouter.test.js --exit
 
 describe("Backend Ecommerce Proyect: Carts Router Test",function(){
     this.timeout(10000)

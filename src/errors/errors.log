@@ -171,3 +171,191 @@
   timestamp: '2024-09-08T18:17:26.041Z',
   label: 'Environment: prod'
 }
+{
+  source: 'ReqMethod:GET, endpoint /66dc91e6374fd5b41b2b24c1',
+  userId: 'N/A: Public',
+  userEmail: 'N/A: Public',
+  userAgent: 'Host',
+  name: 'Resource not found',
+  cause: 'Element tied to reference #66dc91e6374fd5b41b2b24c1 was not found',
+  stack: 'Resource not found: Element tied to reference #66dc91e6374fd5b41b2b24c1 was not found\n' +
+    '    at Function.createError (file:///D:/Coding/53140-backend/codigo/desafios/desafiosEntregables/d19_ProyectoFinal/src/utils/CustomError.js:3:23)\n' +
+    '    at getProductById (file:///D:/Coding/53140-backend/codigo/desafios/desafiosEntregables/d19_ProyectoFinal/src/controller/productsController.js:59:41)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:96:5)',
+  level: 'error',
+  message: 'Server Error 500',
+  timestamp: '2024-09-08T19:23:37.473Z',
+  label: 'Environment: prod'
+}
+{
+  source: 'ReqMethod:POST, endpoint /',
+  userId: 'adminId',
+  userEmail: 'adminCoder@coder.com',
+  userAgent: 'Host',
+  name: 'Missing Properties',
+  cause: 'Property title is missing',
+  stack: 'Missing Properties: Property title is missing\n' +
+    '    at Function.createError (file:///D:/Coding/53140-backend/codigo/desafios/desafiosEntregables/d19_ProyectoFinal/src/utils/CustomError.js:3:23)\n' +
+    '    at postProduct (file:///D:/Coding/53140-backend/codigo/desafios/desafiosEntregables/d19_ProyectoFinal/src/controller/productsController.js:101:37)\n' +
+    '    at Layer.handle [as handle_request] (D:\\Coding\\53140-backend\\codigo\\desafios\\desafiosEntregables\\d19_ProyectoFinal\\node_modules\\express\\lib\\router\\layer.js:95:5)\n' +
+    '    at next (D:\\Coding\\53140-backend\\codigo\\desafios\\desafiosEntregables\\d19_ProyectoFinal\\node_modules\\express\\lib\\router\\route.js:149:13)\n' +
+    '    at file:///D:/Coding/53140-backend/codigo/desafios/desafiosEntregables/d19_ProyectoFinal/src/middleware/auth.js:31:16\n' +
+    '    at Layer.handle [as handle_request] (D:\\Coding\\53140-backend\\codigo\\desafios\\desafiosEntregables\\d19_ProyectoFinal\\node_modules\\express\\lib\\router\\layer.js:95:5)\n' +
+    '    at next (D:\\Coding\\53140-backend\\codigo\\desafios\\desafiosEntregables\\d19_ProyectoFinal\\node_modules\\express\\lib\\router\\route.js:149:13)\n' +
+    '    at Route.dispatch (D:\\Coding\\53140-backend\\codigo\\desafios\\desafiosEntregables\\d19_ProyectoFinal\\node_modules\\express\\lib\\router\\route.js:119:3)\n' +
+    '    at Layer.handle [as handle_request] (D:\\Coding\\53140-backend\\codigo\\desafios\\desafiosEntregables\\d19_ProyectoFinal\\node_modules\\express\\lib\\router\\layer.js:95:5)\n' +
+    '    at D:\\Coding\\53140-backend\\codigo\\desafios\\desafiosEntregables\\d19_ProyectoFinal\\node_modules\\express\\lib\\router\\index.js:284:15',
+  level: 'error',
+  message: 'Server Error 500',
+  timestamp: '2024-09-08T19:23:38.801Z',
+  label: 'Environment: prod'
+}
+{
+  source: 'ReqMethod:POST, endpoint /',
+  userId: 'adminId',
+  userEmail: 'adminCoder@coder.com',
+  userAgent: 'Host',
+  name: 'Missing Properties',
+  cause: 'Property code is missing',
+  stack: 'Missing Properties: Property code is missing\n' +
+    '    at Function.createError (file:///D:/Coding/53140-backend/codigo/desafios/desafiosEntregables/d19_ProyectoFinal/src/utils/CustomError.js:3:23)\n' +
+    '    at postProduct (file:///D:/Coding/53140-backend/codigo/desafios/desafiosEntregables/d19_ProyectoFinal/src/controller/productsController.js:101:37)\n' +
+    '    at Layer.handle [as handle_request] (D:\\Coding\\53140-backend\\codigo\\desafios\\desafiosEntregables\\d19_ProyectoFinal\\node_modules\\express\\lib\\router\\layer.js:95:5)\n' +
+    '    at next (D:\\Coding\\53140-backend\\codigo\\desafios\\desafiosEntregables\\d19_ProyectoFinal\\node_modules\\express\\lib\\router\\route.js:149:13)\n' +
+    '    at file:///D:/Coding/53140-backend/codigo/desafios/desafiosEntregables/d19_ProyectoFinal/src/middleware/auth.js:31:16\n' +
+    '    at Layer.handle [as handle_request] (D:\\Coding\\53140-backend\\codigo\\desafios\\desafiosEntregables\\d19_ProyectoFinal\\node_modules\\express\\lib\\router\\layer.js:95:5)\n' +
+    '    at next (D:\\Coding\\53140-backend\\codigo\\desafios\\desafiosEntregables\\d19_ProyectoFinal\\node_modules\\express\\lib\\router\\route.js:149:13)\n' +
+    '    at Route.dispatch (D:\\Coding\\53140-backend\\codigo\\desafios\\desafiosEntregables\\d19_ProyectoFinal\\node_modules\\express\\lib\\router\\route.js:119:3)\n' +
+    '    at Layer.handle [as handle_request] (D:\\Coding\\53140-backend\\codigo\\desafios\\desafiosEntregables\\d19_ProyectoFinal\\node_modules\\express\\lib\\router\\layer.js:95:5)\n' +
+    '    at D:\\Coding\\53140-backend\\codigo\\desafios\\desafiosEntregables\\d19_ProyectoFinal\\node_modules\\express\\lib\\router\\index.js:284:15',
+  level: 'error',
+  message: 'Server Error 500',
+  timestamp: '2024-09-08T19:23:39.752Z',
+  label: 'Environment: prod'
+}
+{
+  source: 'ReqMethod:GET, endpoint /66dc91e6374fd5b41b2b24c1',
+  userId: 'N/A: Public',
+  userEmail: 'N/A: Public',
+  userAgent: 'Host',
+  name: 'Resource not found',
+  cause: 'Element tied to reference #66dc91e6374fd5b41b2b24c1 was not found',
+  stack: 'Resource not found: Element tied to reference #66dc91e6374fd5b41b2b24c1 was not found\n' +
+    '    at Function.createError (file:///D:/Coding/53140-backend/codigo/desafios/desafiosEntregables/d19_ProyectoFinal/src/utils/CustomError.js:3:23)\n' +
+    '    at getProductById (file:///D:/Coding/53140-backend/codigo/desafios/desafiosEntregables/d19_ProyectoFinal/src/controller/productsController.js:59:41)\n' +
+    '    at runMicrotasks (<anonymous>)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:96:5)',
+  level: 'error',
+  message: 'Server Error 500',
+  timestamp: '2024-09-08T19:25:29.534Z',
+  label: 'Environment: prod'
+}
+{
+  source: 'ReqMethod:POST, endpoint /',
+  userId: 'adminId',
+  userEmail: 'adminCoder@coder.com',
+  userAgent: 'Host',
+  name: 'Missing Properties',
+  cause: 'Property title is missing',
+  stack: 'Missing Properties: Property title is missing\n' +
+    '    at Function.createError (file:///D:/Coding/53140-backend/codigo/desafios/desafiosEntregables/d19_ProyectoFinal/src/utils/CustomError.js:3:23)\n' +
+    '    at postProduct (file:///D:/Coding/53140-backend/codigo/desafios/desafiosEntregables/d19_ProyectoFinal/src/controller/productsController.js:101:37)\n' +
+    '    at Layer.handle [as handle_request] (D:\\Coding\\53140-backend\\codigo\\desafios\\desafiosEntregables\\d19_ProyectoFinal\\node_modules\\express\\lib\\router\\layer.js:95:5)\n' +
+    '    at next (D:\\Coding\\53140-backend\\codigo\\desafios\\desafiosEntregables\\d19_ProyectoFinal\\node_modules\\express\\lib\\router\\route.js:149:13)\n' +
+    '    at file:///D:/Coding/53140-backend/codigo/desafios/desafiosEntregables/d19_ProyectoFinal/src/middleware/auth.js:31:16\n' +
+    '    at Layer.handle [as handle_request] (D:\\Coding\\53140-backend\\codigo\\desafios\\desafiosEntregables\\d19_ProyectoFinal\\node_modules\\express\\lib\\router\\layer.js:95:5)\n' +
+    '    at next (D:\\Coding\\53140-backend\\codigo\\desafios\\desafiosEntregables\\d19_ProyectoFinal\\node_modules\\express\\lib\\router\\route.js:149:13)\n' +
+    '    at Route.dispatch (D:\\Coding\\53140-backend\\codigo\\desafios\\desafiosEntregables\\d19_ProyectoFinal\\node_modules\\express\\lib\\router\\route.js:119:3)\n' +
+    '    at Layer.handle [as handle_request] (D:\\Coding\\53140-backend\\codigo\\desafios\\desafiosEntregables\\d19_ProyectoFinal\\node_modules\\express\\lib\\router\\layer.js:95:5)\n' +
+    '    at D:\\Coding\\53140-backend\\codigo\\desafios\\desafiosEntregables\\d19_ProyectoFinal\\node_modules\\express\\lib\\router\\index.js:284:15',
+  level: 'error',
+  message: 'Server Error 500',
+  timestamp: '2024-09-08T19:25:30.756Z',
+  label: 'Environment: prod'
+}
+{
+  source: 'ReqMethod:POST, endpoint /',
+  userId: 'adminId',
+  userEmail: 'adminCoder@coder.com',
+  userAgent: 'Host',
+  name: 'Missing Properties',
+  cause: 'Property code is missing',
+  stack: 'Missing Properties: Property code is missing\n' +
+    '    at Function.createError (file:///D:/Coding/53140-backend/codigo/desafios/desafiosEntregables/d19_ProyectoFinal/src/utils/CustomError.js:3:23)\n' +
+    '    at postProduct (file:///D:/Coding/53140-backend/codigo/desafios/desafiosEntregables/d19_ProyectoFinal/src/controller/productsController.js:101:37)\n' +
+    '    at Layer.handle [as handle_request] (D:\\Coding\\53140-backend\\codigo\\desafios\\desafiosEntregables\\d19_ProyectoFinal\\node_modules\\express\\lib\\router\\layer.js:95:5)\n' +
+    '    at next (D:\\Coding\\53140-backend\\codigo\\desafios\\desafiosEntregables\\d19_ProyectoFinal\\node_modules\\express\\lib\\router\\route.js:149:13)\n' +
+    '    at file:///D:/Coding/53140-backend/codigo/desafios/desafiosEntregables/d19_ProyectoFinal/src/middleware/auth.js:31:16\n' +
+    '    at Layer.handle [as handle_request] (D:\\Coding\\53140-backend\\codigo\\desafios\\desafiosEntregables\\d19_ProyectoFinal\\node_modules\\express\\lib\\router\\layer.js:95:5)\n' +
+    '    at next (D:\\Coding\\53140-backend\\codigo\\desafios\\desafiosEntregables\\d19_ProyectoFinal\\node_modules\\express\\lib\\router\\route.js:149:13)\n' +
+    '    at Route.dispatch (D:\\Coding\\53140-backend\\codigo\\desafios\\desafiosEntregables\\d19_ProyectoFinal\\node_modules\\express\\lib\\router\\route.js:119:3)\n' +
+    '    at Layer.handle [as handle_request] (D:\\Coding\\53140-backend\\codigo\\desafios\\desafiosEntregables\\d19_ProyectoFinal\\node_modules\\express\\lib\\router\\layer.js:95:5)\n' +
+    '    at D:\\Coding\\53140-backend\\codigo\\desafios\\desafiosEntregables\\d19_ProyectoFinal\\node_modules\\express\\lib\\router\\index.js:284:15',
+  level: 'error',
+  message: 'Server Error 500',
+  timestamp: '2024-09-08T19:25:31.649Z',
+  label: 'Environment: prod'
+}
+{
+  source: 'ReqMethod:GET, endpoint /66dc91e6374fd5b41b2b24c1',
+  userId: 'N/A: Public',
+  userEmail: 'N/A: Public',
+  userAgent: 'Host',
+  name: 'Resource not found',
+  cause: 'Element tied to reference #66dc91e6374fd5b41b2b24c1 was not found',
+  stack: 'Resource not found: Element tied to reference #66dc91e6374fd5b41b2b24c1 was not found\n' +
+    '    at Function.createError (file:///D:/Coding/53140-backend/codigo/desafios/desafiosEntregables/d19_ProyectoFinal/src/utils/CustomError.js:3:23)\n' +
+    '    at getProductById (file:///D:/Coding/53140-backend/codigo/desafios/desafiosEntregables/d19_ProyectoFinal/src/controller/productsController.js:59:41)\n' +
+    '    at runMicrotasks (<anonymous>)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:96:5)',
+  level: 'error',
+  message: 'Server Error 500',
+  timestamp: '2024-09-08T19:41:05.627Z',
+  label: 'Environment: prod'
+}
+{
+  source: 'ReqMethod:POST, endpoint /',
+  userId: 'adminId',
+  userEmail: 'adminCoder@coder.com',
+  userAgent: 'Host',
+  name: 'Missing Properties',
+  cause: 'Property title is missing',
+  stack: 'Missing Properties: Property title is missing\n' +
+    '    at Function.createError (file:///D:/Coding/53140-backend/codigo/desafios/desafiosEntregables/d19_ProyectoFinal/src/utils/CustomError.js:3:23)\n' +
+    '    at postProduct (file:///D:/Coding/53140-backend/codigo/desafios/desafiosEntregables/d19_ProyectoFinal/src/controller/productsController.js:101:37)\n' +
+    '    at Layer.handle [as handle_request] (D:\\Coding\\53140-backend\\codigo\\desafios\\desafiosEntregables\\d19_ProyectoFinal\\node_modules\\express\\lib\\router\\layer.js:95:5)\n' +
+    '    at next (D:\\Coding\\53140-backend\\codigo\\desafios\\desafiosEntregables\\d19_ProyectoFinal\\node_modules\\express\\lib\\router\\route.js:149:13)\n' +
+    '    at file:///D:/Coding/53140-backend/codigo/desafios/desafiosEntregables/d19_ProyectoFinal/src/middleware/auth.js:31:16\n' +
+    '    at Layer.handle [as handle_request] (D:\\Coding\\53140-backend\\codigo\\desafios\\desafiosEntregables\\d19_ProyectoFinal\\node_modules\\express\\lib\\router\\layer.js:95:5)\n' +
+    '    at next (D:\\Coding\\53140-backend\\codigo\\desafios\\desafiosEntregables\\d19_ProyectoFinal\\node_modules\\express\\lib\\router\\route.js:149:13)\n' +
+    '    at Route.dispatch (D:\\Coding\\53140-backend\\codigo\\desafios\\desafiosEntregables\\d19_ProyectoFinal\\node_modules\\express\\lib\\router\\route.js:119:3)\n' +
+    '    at Layer.handle [as handle_request] (D:\\Coding\\53140-backend\\codigo\\desafios\\desafiosEntregables\\d19_ProyectoFinal\\node_modules\\express\\lib\\router\\layer.js:95:5)\n' +
+    '    at D:\\Coding\\53140-backend\\codigo\\desafios\\desafiosEntregables\\d19_ProyectoFinal\\node_modules\\express\\lib\\router\\index.js:284:15',
+  level: 'error',
+  message: 'Server Error 500',
+  timestamp: '2024-09-08T19:41:06.868Z',
+  label: 'Environment: prod'
+}
+{
+  source: 'ReqMethod:POST, endpoint /',
+  userId: 'adminId',
+  userEmail: 'adminCoder@coder.com',
+  userAgent: 'Host',
+  name: 'Missing Properties',
+  cause: 'Property code is missing',
+  stack: 'Missing Properties: Property code is missing\n' +
+    '    at Function.createError (file:///D:/Coding/53140-backend/codigo/desafios/desafiosEntregables/d19_ProyectoFinal/src/utils/CustomError.js:3:23)\n' +
+    '    at postProduct (file:///D:/Coding/53140-backend/codigo/desafios/desafiosEntregables/d19_ProyectoFinal/src/controller/productsController.js:101:37)\n' +
+    '    at Layer.handle [as handle_request] (D:\\Coding\\53140-backend\\codigo\\desafios\\desafiosEntregables\\d19_ProyectoFinal\\node_modules\\express\\lib\\router\\layer.js:95:5)\n' +
+    '    at next (D:\\Coding\\53140-backend\\codigo\\desafios\\desafiosEntregables\\d19_ProyectoFinal\\node_modules\\express\\lib\\router\\route.js:149:13)\n' +
+    '    at file:///D:/Coding/53140-backend/codigo/desafios/desafiosEntregables/d19_ProyectoFinal/src/middleware/auth.js:31:16\n' +
+    '    at Layer.handle [as handle_request] (D:\\Coding\\53140-backend\\codigo\\desafios\\desafiosEntregables\\d19_ProyectoFinal\\node_modules\\express\\lib\\router\\layer.js:95:5)\n' +
+    '    at next (D:\\Coding\\53140-backend\\codigo\\desafios\\desafiosEntregables\\d19_ProyectoFinal\\node_modules\\express\\lib\\router\\route.js:149:13)\n' +
+    '    at Route.dispatch (D:\\Coding\\53140-backend\\codigo\\desafios\\desafiosEntregables\\d19_ProyectoFinal\\node_modules\\express\\lib\\router\\route.js:119:3)\n' +
+    '    at Layer.handle [as handle_request] (D:\\Coding\\53140-backend\\codigo\\desafios\\desafiosEntregables\\d19_ProyectoFinal\\node_modules\\express\\lib\\router\\layer.js:95:5)\n' +
+    '    at D:\\Coding\\53140-backend\\codigo\\desafios\\desafiosEntregables\\d19_ProyectoFinal\\node_modules\\express\\lib\\router\\index.js:284:15',
+  level: 'error',
+  message: 'Server Error 500',
+  timestamp: '2024-09-08T19:41:07.812Z',
+  label: 'Environment: prod'
+}

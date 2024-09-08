@@ -4,7 +4,6 @@ import { CustomError } from "../utils/CustomError.js";
 import { postMissingProperty, duplicatedCode, notFound } from "../utils/errorCauses.js";
 import { ERROR_CODES } from "../utils/EErrors.js";
 import { reqLoggerDTO } from "../DTO/reqLoggerDTO.js";
-//import { UsersManagerMongo as UsersManager } from "../dao/usersManagerMONGO.js";
 import { usersService } from "../services/usersService.js";
 import { config } from "../config/config.js";
 import { sendEmail } from "../utils.js";

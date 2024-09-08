@@ -5,7 +5,6 @@ import mongoose, {isValidObjectId} from "mongoose";
 import { connectionDB } from "./helpers/dbConnection.js";
 
 const requester=supertest("http://localhost:8080")
-//npx mocha ./test/productsRouter.test.js --exit
 
 describe("Backend Ecommerce Proyect: Products Router Test",function(){
     this.timeout(10000)        

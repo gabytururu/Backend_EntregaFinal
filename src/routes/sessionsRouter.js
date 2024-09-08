@@ -7,7 +7,6 @@ import { userDTO } from '../DTO/userDTO.js';
 import { usersService } from "../services/usersService.js";
 import { reqLoggerDTO } from '../DTO/reqLoggerDTO.js';
 import { config } from "../config/config.js";
-import bcrypt from 'bcrypt';
 
 export const router=Router();
 

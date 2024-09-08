@@ -8,35 +8,7 @@ import { config } from "../config/config.js";
 
 
 export class VistasController{
-
-    //loggerTest function
-    static getLoggerTest=async(req,res)=>{
-        req.logger.debug('testing debug logger',new reqLoggerDTO(req))
-        req.logger.http('testing info logger',new reqLoggerDTO(req))
-        req.logger.info('testing debug logger',new reqLoggerDTO(req))
-        req.logger.warning('testing warging logger',new reqLoggerDTO(req))
-        
-        try{
-            let test= await testFunction()
-            res.setHeader('Content-type', 'application/json');
-            return res.status(200).json({payload:test})
-        }catch(error){
-            req.logger.error('testing error logger',new reqLoggerDTO(req,error))
-            req.logger.fatal('testing fatal logger',new reqLoggerDTO(req,error))
-        }       
-    }
-
-    //mocking products function
-    static getMockingProducts=async(req,res)=>{
-        let mockingProducts = []
-        for(let i=0; i<=100; i++){
-            mockingProducts.push(generateMockProduct())
-        }
-        res.setHeader('Content-type', 'application/json');
-        return res.status(200).json({payload:mockingProducts})
-    }
-
-    //Ecommerce real API functions
+    
     static renderHome=async(req,res)=>{
         res.status(301).redirect('/login');
     }

@@ -19,9 +19,7 @@ export const errorHandler=async(error,req,res,next)=>{
         terminal: os.hostname(),
         details: error.cause,
         //stack:error.stack
-    }
-
-    
+    }    
     
     let details={
         ...errorDetails,

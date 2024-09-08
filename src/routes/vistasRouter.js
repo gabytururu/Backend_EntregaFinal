@@ -4,14 +4,6 @@ import { customAuth } from '../middleware/auth.js';
 import { config } from '../config/config.js';
 
 export const router=Router();
-
-  //logger test endpoint
-  router.get('/loggerTest',customAuth(["public"]),VistasController.getLoggerTest)
-
-  //mocking proucts endpoint
-  router.get('/mockingProducts',customAuth(["public"]),VistasController.getMockingProducts)
-
-  //real ecommerce API endpoints
   router.get('/',customAuth(["public"]),VistasController.renderHome)
   router.get('/products',customAuth(["public"]),VistasController.renderProducts)
   router.get('/products/:pid',customAuth(["public"]),VistasController.renderProductById)
@@ -29,6 +21,3 @@ export const router=Router();
   router.get('/password',customAuth(["public"]),VistasController.renderPassword)
   router.get('/resetPassword',customAuth(["public"]),VistasController.renderResetPassword)
   router.get('/error',customAuth(["public"]),VistasController.renderError)
-
-
-

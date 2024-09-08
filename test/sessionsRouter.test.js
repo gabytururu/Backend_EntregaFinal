@@ -5,7 +5,6 @@ import { connectionDB } from "./helpers/dbConnection.js";
 import mongoose from "mongoose";
 
 const requester=supertest("http://localhost:8080")
-//npx mocha ./test/sessionsRouter.test.js --exit
 
 describe("Backend Ecommerce Proyect: Sessions Router Test",function(){
     this.timeout(10000)

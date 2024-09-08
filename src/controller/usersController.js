@@ -4,7 +4,6 @@ import { usersService } from '../services/usersService.js';
 import { productsService } from "../services/productsService.js";
 import { cleanPath, sendEmail } from "../utils.js";
 import { isValidObjectId } from "mongoose";
-import { usersModel } from '../dao/models/usersModel.js'
 import { config } from "../config/config.js";
 import { userDTO } from "../DTO/userDTO.js";
 
@@ -295,7 +294,6 @@ export class UsersController{
                     throw new Error("invalid Time Unit Specified")
             }    
 
-            // --------------------- test following 2 and decide if redundant to elimintate first ------------------------//
             const usersToDelete = await usersService.getUsersBy(cutOffTiming)
             if(!usersToDelete){
                 res.setHeader('Content-type', 'application/json');
@@ -313,7 +311,6 @@ export class UsersController{
                     payload:deleteOldConnections
                 })
             }            
-            // --------------------- END test following 2 and decide if redundant to elimintate first ------------------------//
 
             if(deleteOldConnections.deletedCount>0){
                 for(let user of usersToDelete){
@@ -364,22 +361,4 @@ export class UsersController{
             })
         }       
     }
-
-    
-
-    //borrar pre-entrega.. ruta de limpieza 
-    static deleteNoLastConnection = async(req,res)=>{
-        try {
-         const deletedNoLastConn= await usersModel.deleteMany({ "last_connection": { $exists: false } })
-         res.setHeader('Content-type', 'application/json');
-         return res.status(200).json({payload:deletedNoLastConn})
-         
-        } catch (error) {
-         res.setHeader('Content-type', 'application/json');
-         return res.status(500).json({
-             error:`Error 500 Server failed unexpectedly, please try again later`,
-             message: `${error.message}`
-         })
-        }      
-     }
 }
