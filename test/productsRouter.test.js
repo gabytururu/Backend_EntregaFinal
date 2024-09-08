@@ -2,7 +2,7 @@ import { describe, it, afterEach, before } from "mocha";
 import { expect } from "chai";
 import supertest from "supertest-session";
 import mongoose, {isValidObjectId} from "mongoose";
-
+import { connectionDB } from "./helpers/dbConnection.js";
 
 const requester=supertest("http://localhost:8080")
 //npx mocha ./test/productsRouter.test.js --exit
@@ -44,7 +44,7 @@ describe("Backend Ecommerce Proyect: Products Router Test",function(){
     })
     describe("GET api/products/:pid",function(){
         it("La ruta GET /api/products/:pid opera OK, y retorna 1 objeto con mínimo 9 propiedades",async function(){
-            let pid= "663d20d460f80adeaa82bb7f"
+            let pid= "66dc91e6374fd5b41b2b24ca"
             const {body,status}=await requester.get(`/api/products/${pid}`)
             expect(status).to.equal(200)
             expect(body.payload).to.exist
@@ -52,13 +52,13 @@ describe("Backend Ecommerce Proyect: Products Router Test",function(){
             expect(Object.keys(body.payload).length).to.be.greaterThan(8)
         })
         it("La ruta GET /api/products/:pid retorna ERROR cuando :pid no es un formato válido",async function(){
-            let pid= "663d200860f80adeaa82bb"
+            let pid= "66dc91e6374fd5b41b2b"
             const {body,status}=await requester.get(`/api/products/${pid}`)
             expect(status).to.equal(400)
             expect(isValidObjectId(pid)).to.equal(false)
         })
         it("La ruta GET /api/products/:pid retorna ERROR 404 cuando :pid es válido pero no existe en la BD",async function(){
-            let pid= "663d200860f80adeaa82bb5b"
+            let pid= "66dc91e6374fd5b41b2b24c1"
             const {body,status}=await requester.get(`/api/products/${pid}`)
             expect(status).to.equal(404)
         })
@@ -80,67 +80,6 @@ describe("Backend Ecommerce Proyect: Products Router Test",function(){
             expect(response.body.error).includes('Authentication')
         })
     })  
-    describe("POST api/products/ -> con user con privilegios loggeado", function(){
-        let product;
-        let user;
-        before(async function(){
-            product={
-                "title": "Kit de cocina para outdoors - 18 piezas",
-                "description": "Kit de cocina de acero inoxidable para outdoors - 5 piezas incluye olla, sarten, cubiertos y utensilios resistentes al agua y de uso rudo",
-                "price": 40,
-                "code": Math.floor(100000 + Math.random() * 100000),
-                "stock": 22,
-                "status": true,
-                "category": "senderismo",
-                "thumbnails": "https://picsum.photos/200"
-            }        
-            user={"email":"adminCoder@coder.com", "password":"adminCod3r123"}
-            try {
-                await requester.post("/api/sessions/login").send(user)
-            } catch (error) {
-                throw new Error(`Error attemting LOGIN BEFORE POST /api/products: ${error}`)
-            }           
-        })
-        after(async function(){
-            try {
-                //falta borrar todos los productos creados (mayores que 99999)
-                await requester.get("/api/sessions/logout")
-            } catch (error) {
-                throw new Error(`Error attempting LOGOUT in api/sessions/login Test:${error}`)
-            }
-        })
-
-        it("La ruta POST api/products con user correcto, sin objeto en body retorna error 400",async function(){
-            const response = await requester.post("/api/products/")
-            expect(response.status).to.equal(400)
-            expect(response.body.error).includes("Missing Arguments")
-        })
-        it("La ruta POST api/products con user correcto y body correcto retorna 200",async function(){
-            const response = await requester.post("/api/products").send(product)
-            expect(response.status).to.equal(200)
-            expect(response.body.status).to.equal("success")
-        })
-
-        it("La ruta POST api/products con user correcto y body correcto retorna un objeto con las props del producto creado",async function(){
-            let productB=product
-            productB.code=productB.code+1
-            const response = await requester.post("/api/products").send(productB)
-            expect(response.body.payload).to.exist
-            let productoCreado=response.body.payload
-            expect(productoCreado).to.be.an("object")
-            expect(productoCreado).to.include.all.keys("_id","title","description","price","code","stock","status","owner","category","thumbnails")            
-        })
-        it("La ruta POST api/products con user correcto pero body incompleto retorna error 400 por propiedades faltantes", async function(){
-            let productC=product
-            delete productC.code
-            delete productC.price
-            const response = await requester.post("/api/products").send(productC)
-            expect(response.status).to.equal(400)
-            expect(response.body.type).to.equal("Missing Properties")
-        }) 
-
-        
-    })
     describe("POST api/products/ -> con user sin privilegios loggeado",function(){
         let product;
         let user;
@@ -164,7 +103,6 @@ describe("Backend Ecommerce Proyect: Products Router Test",function(){
         })
         after(async function(){
             try {
-                //falta borrar todos los productos creados (mayores que 99999)
                 await requester.get("/api/sessions/logout")
             } catch (error) {
                 throw new Error(`Error attempting LOGOUT in api/sessions/login Test:${error}`)
@@ -177,7 +115,71 @@ describe("Backend Ecommerce Proyect: Products Router Test",function(){
             expect(response.body.type).to.include("Authorization")
         })  
     })
-    
+    describe("POST api/products/ -> con user con privilegios loggeado", function(){
+        let product;
+        let user;
+        before(async function(){
+            product={
+                "title": "Kit de cocina para outdoors - 18 piezas",
+                "description": "Kit de cocina de acero inoxidable para outdoors - 5 piezas incluye olla, sarten, cubiertos y utensilios resistentes al agua y de uso rudo",
+                "price": 40,
+                "code": Math.floor(100000 + Math.random() * 900000),
+                "stock": 22,
+                "status": true,
+                "category": "senderismo",
+                "thumbnails": "https://picsum.photos/200"
+            }        
+            user={"email":"adminCoder@coder.com", "password":"adminCod3r123"}
+            try {
+                await requester.post("/api/sessions/login").send(user)
+            } catch (error) {
+                throw new Error(`Error attemting LOGIN BEFORE POST /api/products: ${error}`)
+            }           
+        })
+        
+        after(async function(){
+            try {          
+                await connectionDB()
+                await mongoose.connection.collection("products").deleteMany({code:{$gt:99999}});   
+                console.log("Test products removed successfully from DB")
+                await requester.get("/api/sessions/logout")
+                console.log("Test user logged out successfully after productsRouterTest.js")              
+            } catch (error) {
+                throw new Error(`Error during Product cleanup or logout: ${error}`)
+            }finally{
+                await mongoose.disconnect();
+                console.log("Mongoose Connection Ended Successfully for: ProductsRouter.Test")
+            }
+        })
+
+        it("La ruta POST api/products con user correcto, sin objeto en body retorna error 400",async function(){
+            const response = await requester.post("/api/products/")
+            expect(response.status).to.equal(400)
+            expect(response.body.error).includes("Missing Arguments")
+        })
+        it("La ruta POST api/products con user correcto y body correcto retorna 200",async function(){
+            const response = await requester.post("/api/products").send(product)
+            expect(response.status).to.equal(200)
+            expect(response.body.status).to.equal("success")
+        })
+        it("La ruta POST api/products con user correcto y body correcto retorna un objeto con las props del producto creado",async function(){
+            let productB=product
+            productB.code=productB.code+1
+            const response = await requester.post("/api/products").send(productB)
+            expect(response.body.payload).to.exist
+            let productoCreado=response.body.payload
+            expect(productoCreado).to.be.an("object")
+            expect(productoCreado).to.include.all.keys("_id","title","description","price","code","stock","status","owner","category","thumbnails")            
+        })
+        it("La ruta POST api/products con user correcto pero body incompleto retorna error 400 por propiedades faltantes", async function(){
+            let productC=product
+            delete productC.code
+            delete productC.price
+            const response = await requester.post("/api/products").send(productC)
+            expect(response.status).to.equal(400)
+            expect(response.body.type).to.equal("Missing Properties")
+        })         
+    })    
 })
 
 

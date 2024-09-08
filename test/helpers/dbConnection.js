@@ -9,7 +9,7 @@ export const connectionDB=async()=>{
             dbName: config.DB_NAME
         }
         )
-        console.log("DB conectada...!!!")
+        console.log("Mongoose connection to DB successfully initiated")
     } catch (error) {
         throw new Error(`Error al conectar a DB: ${error}`)
     }

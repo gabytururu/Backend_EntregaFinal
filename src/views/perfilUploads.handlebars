@@ -3,11 +3,11 @@
     <h1>Documentos de Usuario</h1>
     <hr>
     <h2>!Hola! {{user.first_name}}, vamos a actualizar tus datos en sistema</h2>
-    <h3>Por favor proporciona los documentos solicitados a continuación</h3>
-                      <p>{{user._id}}</p>
-    <form action="/api/users/{{user._id}}/documents" method="POST" enctype="multipart/form-data">
+    <h3 class="subtitle">Por favor proporciona los documentos solicitados a continuación</h3>
+                
+    <form action="/api/users/{{user._id}}/documents" method="POST" enctype="multipart/form-data" class="formLogin">
         <div>
-            <input type="file" name="upload">
+            <input type="file" name="upload" class="fileButton">
             <select name="name">
                 <option value="profilePic" selected>Foto de Perfil</option>
                 <option value="identificacion">Identificacion</option>

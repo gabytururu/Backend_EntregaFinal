@@ -34,8 +34,6 @@ class UsersService{
     }
 
     removeProductFromOwner=async(uid,ownedProduct)=>{
-        console.log("el uid y typeof del servicio:",uid, typeof uid)
-        console.log("el ownedProduct y typeof del servicio:",ownedProduct, typeof ownedProduct)
         return await this.dao.pull(uid,ownedProduct) 
     }
 

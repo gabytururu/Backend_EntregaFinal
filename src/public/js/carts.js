@@ -22,9 +22,20 @@ const finalizarCompra = async(cid)=>{
                     `,
               });
         }
+
+        if(response.status===403 || response.status===401){
+            Swal.fire({
+                icon: "error",
+                title: "Ooops!! No podemos completar la acción",
+                html: `
+                    <p>Usted no está autorizado para finalizar esta compra</p>
+                    <p>Sólo los usuarios "dueños" del carrito pueden finalizar la compra correspondiente a su carrito</p>
+                    <h3>¡Contáctanos si consideras que esto es un error de nuestra parte y Sigue Explorando!</h3>
+                    `,
+              });
+        }
         
         const data = await response.json()
-        console.log("la respuesta post FINALIZE PURCHASE: ", data)
         if(response.status===200){
             const tid = data.payload._id            
             window.location.href = `/purchase/${tid}`

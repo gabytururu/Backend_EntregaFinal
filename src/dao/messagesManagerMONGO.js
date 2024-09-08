@@ -1,12 +1,12 @@
-import { messagesModel } from "./models/messagesModel.js"
+// import { messagesModel } from "./models/messagesModel.js"
 
-export class MessagesManagerMONGO {
+// export class MessagesManagerMONGO {
 
-    async getMessages(){
-        return await messagesModel.find()
-    }
+//     async getMessages(){
+//         return await messagesModel.find()
+//     }
 
-    async postMessage(message){              
-        return await messagesModel.create(message)
-    }
-}
+//     async postMessage(message){              
+//         return await messagesModel.create(message)
+//     }
+// }

@@ -2,7 +2,7 @@ import dotenv from "dotenv"
 
 dotenv.config({
     path:"src/.env",
-    overrride: true
+    override: true
 })
 
 export const config={

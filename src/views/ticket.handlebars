@@ -19,13 +19,13 @@
             <div class="resultsliContainer">
                 {{#each ticketDetails.productsPurchased}}
                     <div>                   
-                        <p><strong>{{qty}} {{title}} ${{price}} USD</strong></p>
+                        <p><strong>{{qty}} {{title}}:</strong> ${{price}} USD</p>
                         <hr>
                         <hr>
                     </div>                    
                 {{/each}}
                 <div>            
-                    <p><strong>Total:</strong> ${{ticketDetails.amount}} USD</p>
+                    <h3><strong>Total:</strong> ${{ticketDetails.amount}} USD</h3>
                 </div> 
                 {{#if ticketDetails.carts.products}}             
                 <div>           

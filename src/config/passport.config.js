@@ -3,15 +3,12 @@ import local from "passport-local";
 import github from "passport-github2";
 import { config } from "./config.js";
 import { cartsService } from "../services/cartsService.js";
-import { UsersManagerMongo as UsersManager } from "../dao/usersManagerMONGO.js";
 import { hashPassword, validatePassword } from "../utils.js";
 import { reqLoggerDTO } from "../DTO/reqLoggerDTO.js";
 import { appLoggerDTO } from "../DTO/appLoggerDTO.js";
 import { appLogger } from "../utils/logger.js";
 import { userDTO } from "../DTO/userDTO.js";
-
-const usersManager = new UsersManager()
-
+import { usersService } from "../services/usersService.js";
 
 export const initPassport=()=>{
     // --------- estrategia de registro -------------------//
@@ -45,8 +42,7 @@ export const initPassport=()=>{
                         appLogger.info('REGISTRO FAILED: The email %s does not match a valid email format. Other types of data structures are not accepted as an email address. Please verify and try again',username)                         
                         return done(null,false, {message: `Signup failed: missing credentials: invalid email format - please try again`})
                     }
-                
-                    const emailAlreadyExists = await usersManager.getUserByFilter({email:username})
+                    const emailAlreadyExists = await usersService.getUserByEmail({email:username})
                     if(emailAlreadyExists){
                         appLogger.info('REGISTRO FAILED: The email you are trying to register (email: %s) already exists in our database and cannot be duplicated. Please try again using a diferent email',username)  
                         return done(null,false, {message: `Signup failed: Email already exists and cannot be duplicated - please try again.`})
@@ -54,8 +50,7 @@ export const initPassport=()=>{
 
                     password = hashPassword(password)                  
                     const newCart = await cartsService.createNewCart()
-                    const newUser = await usersManager.createUser({first_name, last_name, age,email:username,password,rol,cart:newCart._id})
-
+                    const newUser = await usersService.createUser({first_name, last_name, age,email:username,password,rol,cart:newCart._id})
                     return done(null, newUser)
 
                 } catch (error) {
@@ -96,7 +91,7 @@ export const initPassport=()=>{
                         return done(null, userIsManager)
                     }
                     
-                    const userIsValid = await usersManager.getUserByFilter({email:username})
+                    const userIsValid=await usersService.getUserByEmail({email:username})
                     if(!userIsValid){
                         appLogger.info('LOGIN FAILED: Failed to complete login. The email provided (email: %s was not found in our database. Please verify and try again',username)
                         return done(null,false, {message: `Login failed - email was not found -please try again`})
@@ -131,10 +126,10 @@ export const initPassport=()=>{
                     const first_name= profile._json.name?profile._json.name:profile.username
                     const last_name= profile._json.name?profile._json.name:profile.username
                     const last_connection = new Date()
-                    let authenticatedUser = await usersManager.getUserByFilter({email})
+                    let authenticatedUser= await usersService.getUserByEmail({email})
                     if(!authenticatedUser){
                         const newCart= await cartsService.createNewCart()
-                        authenticatedUser=await usersManager.createUser({
+                        authenticatedUser=await usersService.createUser({
                             first_name:first_name,
                             last_name:last_name,
                             email:email, 
@@ -167,7 +162,7 @@ export const initPassport=()=>{
                 cart: 'No Aplica'                
             }
         }else{
-            user=await usersManager.getUserByFilter({_id:id})
+            user=await usersService.getUserById({_id:id})
         }       
         return done(null,user)
     })

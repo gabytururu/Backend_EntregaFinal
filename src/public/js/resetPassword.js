@@ -21,8 +21,7 @@ newPasswordButton.addEventListener('click',async(e)=>{
             })
         })
         const data=await response.json()
-        console.log('respuesta server:',data)
-
+   
         if(response.status !== 200 && data.message =='Password repetido'){
             let paragraph = document.createElement('p')
             paragraph.textContent = data.details
@@ -52,6 +51,15 @@ newPasswordButton.addEventListener('click',async(e)=>{
         }        
     } catch (error) {
         console.log('fetch error at password reset screen:',error)
+        Swal.fire({
+            icon: "error",
+            title: "Ooops!! No pudimos completar el proceso",
+            html: `
+                <p>El proceso de reestablecimiento de password no ha sido logrado</p>
+                <p>Por favor intenta más tarde, o comunicate con nosotros vía telefónica</p>
+                <h3>¡Gracias por tu comprensión!</h3>
+                `,
+          });
     }
 })
 

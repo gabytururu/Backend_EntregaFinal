@@ -5,16 +5,12 @@ import { isValidObjectId } from 'mongoose';
 import { ticketDTO } from '../DTO/ticketDTO.js';
 import { uniqueTicketCode } from '../utils.js';
 import { sendEmail } from '../utils.js';
-import { UsersManagerMongo as UsersManager } from '../dao/usersManagerMONGO.js';
 import { config } from '../config/config.js';
 import { CustomError } from "../utils/CustomError.js";
 import { invalidCartBody, notFound, notProcessed } from "../utils/errorCauses.js";
 import { ERROR_CODES } from "../utils/EErrors.js";
 import { reqLoggerDTO } from '../DTO/reqLoggerDTO.js';
 import { usersService } from '../services/usersService.js';
-// import { TicketsMongoDAO } from '../dao/ticketsMongoDAO.js';
-
-const usersManager = new UsersManager() //maybe move to a service?
 
 export class CartsController{
     static getCarts=async(req,res)=>{
@@ -452,16 +448,13 @@ export class CartsController{
                 productsLeftInCart:remainingCart.products.map(p=>p.pid._id),
                 carts:userCart,
             }
-            console.log("los ticket details a como se va DEL CONTROLLER la DB:", ticketDetails)
+    
             
-            const ticketCreated = await ticketsService.createTicket(ticketDetails)  
-            console.log("el ticket a como es creado: ", ticketCreated) 
-            //const ticketUserAssigned = await usersService.addTicketToUser(userId,ticketCreated._id)
+            const ticketCreated = await ticketsService.createTicket(ticketDetails) 
             const ticketUserAssigned = await usersService.addTicketToUser(userId,ticketCreated)
             const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;            
             ticketCreated.hasEmail =emailRegex.test(userEmail)
-            console.log("respuesta ticketCreated has email: ", ticketCreated.hasEmail)
-           
+        
             if(emailRegex.test(userEmail)){
                 const emailSent = await sendEmail(
                     `BACKEND ECOMM TICKET ${config.GMAIL_EMAIL}`,

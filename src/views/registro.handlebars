@@ -5,22 +5,24 @@
     <br>
     <h2>Por Favor Ingresa tus Datos:</h2>
     <br>
-    <form action="/api/sessions/registro" method="post">
-        <input type="text" name="first_name" placeholder="Nombre">
-        <input type="text" name="last_name" placeholder="Apellido">
-        <input type="email" name="email" placeholder="email">
-        <input type="number" name="age" placeholder="tu edad. Ej: 40">
-        <input type="password" name="password" placeholder="password">
-        <br>
-        <input type="submit" value="registrarme" id="signup">
-    </form>
-
-    <h3>Regístrate vinculando tu cuenta de Github</h3>
-    <a href="/api/sessions/github" class="smallButton">Registrarme con Github</a>
-
-    <h3>¿Ya tienes una Cuenta?</h3>
-    <a href="/login" class="smallButton">Inicia Sesión</a>
-
+    <div >
+        <form action="/api/sessions/registro" method="post" class="formLogin">
+            <input type="text" name="first_name" placeholder="Nombre">
+            <input type="text" name="last_name" placeholder="Apellido">
+            <input type="email" name="email" placeholder="email">
+            <input type="number" name="age" placeholder="tu edad. Ej: 40">
+            <input type="password" name="password" placeholder="password">
+            <br>
+            <input type="submit" value="registrarme" id="signup" class="smallButton login">
+        </form>
+    </div>
+   
+    <div class="loginAlts">
+        <h3>Regístrate vinculando tu cuenta de Github</h3>
+        <a href="/api/sessions/github" class="smallButton">Registrarme con Github</a>
+        <h3>¿Ya tienes una Cuenta?</h3>
+        <a href="/login" class="smallButton">Inicia Sesión</a>
+    </div>
     <br><br>
 </div>
 

@@ -2,6 +2,7 @@ import { describe, it, afterEach, before } from "mocha";
 import { expect } from "chai";
 import supertest from "supertest-session";
 import mongoose, {isValidObjectId} from "mongoose";
+import { connectionDB } from "./helpers/dbConnection.js";
 
 
 const requester=supertest("http://localhost:8080")
@@ -11,6 +12,13 @@ describe("Backend Ecommerce Proyect: Carts Router Test",function(){
     this.timeout(10000)
 
     describe("GET api/carts/ -> sin usuario loggeado o con usuario incorrecto",async function(){
+        after(async function(){
+            try {
+                await requester.get("/api/sessions/logout")
+            } catch (error) {
+                throw new Error(`Error attempting LOGOUT in RouterCarts Test`)
+            }
+        })
         it("La ruta GET /api/carts sin usuario loggeado retorna Error 401",async function(){
             const {body,status}= await requester.get("/api/carts")
             expect(status).to.equal(401)
@@ -92,7 +100,7 @@ describe("Backend Ecommerce Proyect: Carts Router Test",function(){
             }
         })
         it("La ruta GET /api/carts/:cid opera OK, y retorna 1 objeto con mínimo 2 propiedades",async function(){
-            let cid= "66340884792a6e5bf8ff52f8"
+            let cid= "66dca2944c3697a6d4d7e924"
             const {body,status}=await requester.get(`/api/carts/${cid}`)
             expect(status).to.equal(200)
             expect(body.payload).to.exist
@@ -100,21 +108,21 @@ describe("Backend Ecommerce Proyect: Carts Router Test",function(){
             expect(Object.keys(body.payload).length).to.be.greaterThan(2)
         })
         it("La ruta GET /api/carts/:cid retorna ERROR cuando :cid no es un formato válido",async function(){
-            let cid= "66340884792a6e5bf8ff"
+            let cid= "66dca2944c3697a6d4"
             const {status}=await requester.get(`/api/carts/${cid}`)
             expect(status).to.equal(400)
             expect(isValidObjectId(cid)).to.equal(false)
         })
         it("La ruta GET /api/products/:cid retorna ERROR 404 cuando :cid es válido pero no existe en la BD",async function(){
-            let cid= "66340884792a6e5bf8ff52f9"
+            let cid= "66dca2944c3697a6d4d7e923"
             const {status}=await requester.get(`/api/carts/${cid}`)
             expect(status).to.equal(404)
         })
     })
 
     describe("PUT api/carts/:cid/product/:pid --> sin user loggeado", function(){       
-        const cartId="66d7975feb97f0110174c390"
-        const productId="663d204c60f80adeaa82bb64"
+        const cartId="66dc9bc286360834e88de760"
+        const productId="66dc9af086360834e88de753"
 
         before(async function(){
             try {
@@ -132,8 +140,8 @@ describe("Backend Ecommerce Proyect: Carts Router Test",function(){
     })
 
     describe("PUT api/carts/:cid/product/:pid --> con user correcto loggeado",function(){
-        const cartId="66d7975feb97f0110174c390"
-        const productId="663d204c60f80adeaa82bb64"
+        const cartId="66dca2944c3697a6d4d7e924"
+        const productId="66dc91e6374fd5b41b2b24c7"
         let premium={"email":"gabymh4@gmail.com", "password":"123456"}
 
         before(async function(){
@@ -178,8 +186,8 @@ describe("Backend Ecommerce Proyect: Carts Router Test",function(){
     })
 
     describe("PUT api/carts/:cid/product/:pid --> con user sin privilegios loggeado",function(){
-        const cartId="66d7975feb97f0110174c390"
-        const productId="663d204c60f80adeaa82bb64"
+        const cartId="66dc991f86360834e88de711"
+        const productId="66dc91e6374fd5b41b2b24d4"
         let admin={"email":"adminCoder@coder.com", "password":"adminCod3r123"}
 
         before(async function(){

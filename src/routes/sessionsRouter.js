@@ -4,14 +4,11 @@ import { passportCallError, sendEmail,hashPassword, validatePassword, validatePa
 import passport from "passport";
 import {customAuth} from '../middleware/auth.js'
 import { userDTO } from '../DTO/userDTO.js';
-import { UsersManagerMongo as UsersManager } from '../dao/usersManagerMONGO.js';
 import { usersService } from "../services/usersService.js";
 import { reqLoggerDTO } from '../DTO/reqLoggerDTO.js';
 import { config } from "../config/config.js";
 import bcrypt from 'bcrypt';
 
-
-//let usersManager = new UsersManager()
 export const router=Router();
 
 router.post('/registro',passportCallError("registro"),customAuth(["public"]),async(req,res)=>{
@@ -205,28 +202,3 @@ router.post('/resetPassword',async(req,res)=>{
         })
     }
 })
-
-
-
-// router.get('/users/:uid', customAuth(["public"]), async(req,res)=>{
-//     const { uid } = req.params
-//     const singleUser = await usersManager.getUserByFilter({_id:uid})
-    
-//     res.setHeader('Content-type', 'application/json');
-//     return res.status(200).json({payload:singleUser})
-// })
-
-// router.get('/users', customAuth(["public"]), async(req,res)=>{    
-//     const allUsers = await usersManager.getAllUsers()
-
-//     res.setHeader('Content-type', 'application/json');
-//     return res.status(200).json({payload:allUsers})
-// })
-
-// router.put('/users/:uid/:orderTicket',customAuth(["user"]),async(req,res)=>{
-//     const {uid,orderTicket} =req.params   
-//     const updatedUser = await usersManager.addTicketToUser(uid,orderTicket)
-
-//     res.setHeader('Content-type', 'application/json');
-//     return res.status(200).json({payload:updatedUser})    
-// })

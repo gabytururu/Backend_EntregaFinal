@@ -73,13 +73,12 @@ describe("Backend Ecommerce Proyect: Sessions Router Test",function(){
         })
     })
 
-    describe("POST api/sessions/registro",function(){
+    describe("POST api/sessions/registro -> envio con body",function(){
         let newUser;
         before(async function(){
             await mongoose.connection.collection("users").deleteMany({email:"testing2@test.com"})
         })
         beforeEach(async function(){
-
             newUser={
                 first_name:"testUser", 
                 last_name:"testing", 

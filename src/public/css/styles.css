@@ -1,3 +1,71 @@
+h1{
+    font-size: 40px;
+    font-family: 'Verdana';
+}
+
+h2{
+    font-size: 28px;
+    font-family: 'Verdana';
+    text-align: center;
+}
+
+h3{
+    font-size: 23px;
+    font-family: 'Verdana';
+   
+}
+
+.subtitle{
+    text-align: center;
+
+}
+
+p{
+    font-size: 18px;
+    font-family: 'Verdana';
+}
+
+input{
+    padding:8px;
+}
+
+
+select{
+    padding:8px;
+    border-radius: 5px;
+}
+
+.fileButton{
+    padding:8px
+}
+
+.prodImgContainer img{
+    border-radius:8px
+}
+
+.formLogin{
+    background-color: #a1cbf5e7;
+    display: flex;
+    flex-direction: column;
+    margin: 10px;
+    max-width: 80%;
+    margin: auto; 
+}
+
+.formLogin input{
+    margin:10px
+}
+
+.loginAlts{
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+}
+form{
+    background-color: #1a4168;
+}
+
 .mainContainer{    
     background-color: white;
     padding: 30px;
@@ -12,15 +80,6 @@
     padding:10px
 }
 
-h1{
-    font-size: 40px;
-    font-family: 'Verdana';
-}
-
-h2{
-    font-size: 20px;
-    font-family: 'Verdana';
-}
 
 .href{
     background-color: #003366;
@@ -76,7 +135,6 @@ h2{
 
 .productsList{
     background-color: #3399ff;
-    /* background-color: #fafccb; */
     display: flex; 
     width: 70%;
     padding: 30px;
@@ -96,6 +154,7 @@ h2{
     border-bottom:solid 5px #000080;
     justify-content: center;
 }
+
 .resultsliContainer{
     display:flex;
     flex-direction: column;
@@ -113,8 +172,6 @@ h2{
     text-align: center;
     
 }
-
-
 
 .buybuttonContainer{
     display: flex;
@@ -140,7 +197,6 @@ h2{
     color:#000080;
     border-style: dashed
 }
-
 
 
  /* ------------ CHAT ------------ */
@@ -213,14 +269,35 @@ h2{
     font-weight: 600;
 }
 
+.chatButton{
+    background-color: #ffee07;
+    padding:15px;
+    margin:20px;
+    border-radius:5px;
+    text-decoration:none;
+    color:black;
+    font-weight:600;
+    font-size:18px
+}
+
 .smallButton{
     text-decoration: none;
     font-size: 17px;
     text-transform: uppercase;
-    background-color: #000080;
+    background-color: #3838eed5;
     color: white;
     padding:10px;
     border-radius: 5px;
+}
+
+input[type="submit"] {
+    cursor: pointer;
+}
+
+.login{
+    margin-top:10px;
+    background-color: #000080;
+    
 }
 
 .userCarts{
@@ -261,7 +338,6 @@ h2{
 
 .passwordButton{
     background-color: #f3eb74;
-    margin-top:35px;
     padding: 15px;
     border-radius: 5px;
     text-decoration: none;

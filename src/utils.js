@@ -31,7 +31,6 @@ export const validatePasswordAsync = async (password, hashPassword) => {
     }
 };
 
-
 export const passportCallError = (estrategia) =>{
     return function (req,res,next){
         passport.authenticate(estrategia,function(err,user,info,status){
@@ -144,10 +143,4 @@ export const cleanPath=(path)=>{
     return `./${path.split('\\').join('/')}`
 }
 
-//future development
-// export const ROLES = Object.freeze({
-//     admin: 'admin',
-//     user: 'user',
-//     premium: 'premium_user',
-//     public: 'public'
-// });
+

@@ -42,7 +42,7 @@
             {{/if}}
             {{#if userProfile.isAdmin}}
                 <a href="/carts" class="userCarts" id="allCarts">Ver todos los Carritos</a>
-                <a href="/admin" class="adminUser" id="adminUser">Administrar Usuarios</a>
+                <a href="/admin" class="userCarts" id="adminUser">Administrar Usuarios</a>
             {{/if}}           
         </div>
          
@@ -65,7 +65,7 @@
                     <div class="resultsliContainer">
                         <p><strong>{{title}}</strong></p>
                         <p><small>{{_id}}:</small></p>
-                        <div><img src='{{thumbnails}}' width="150px"/></div>
+                        <div class="prodImgContainer"><img src='{{thumbnails}}' width="300px"/></div>
                         <p>{{description}}</p>
                         <p><strong>Precio:</strong> ${{price}}</p>
                     </div>

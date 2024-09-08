@@ -221,9 +221,7 @@ export class VistasController{
                     message: `${error.message}`
                 })
             }
-            // console.log("el matching ticket post service call: ", matchingTicket)
-            // matchingTicket.hasEmail = matchingTicket.hasEmail ==="yes"
-            // console.log("el matching ticket post has email:", matchingTicket)
+    
             res.setHeader('Content-type', 'text/html');
             res.status(200).render('ticket',{
                 sessionData: req.session,
