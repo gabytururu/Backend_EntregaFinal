@@ -15,7 +15,7 @@
                 <p>edad: {{userProfile.age}}</p>
                 <p>email: {{userProfile.email}}</p>
                 <p>Rol: {{userProfile.rol}}</p>       
-                <p> Id# de tu Carrito: {{userProfile.cart._id}}</p>
+                <p> Id# de tu Carrito: {{userProfile.cart._id}}</p>              
             {{/if}}
             {{#if userProfile.isPremium}}
                 <p>Nombre: {{userProfile.first_name}}</p>
@@ -23,7 +23,7 @@
                 <p>edad: {{userProfile.age}}</p>
                 <p>email: {{userProfile.email}}</p>
                 <p>Rol: {{userProfile.rol}}</p>       
-                <p> Id# de tu Carrito: {{userProfile.cart._id}}</p>
+                <p> Id# de tu Carrito PREMIUM: {{userProfile.cart._id}}</p>
             {{/if}}
             {{#if userProfile.isAdmin}}
                 <p>Nombre: {{userProfile.nombre}}</p>

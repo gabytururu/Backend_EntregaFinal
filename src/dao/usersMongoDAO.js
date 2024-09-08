@@ -7,7 +7,7 @@ export class UsersMongoDAO{
     }
 
     async getOneBy(propFilter={}){
-        return await usersModel.findOne(propFilter).populate("tickets").lean()
+        return await usersModel.findOne(propFilter).populate("cart").populate("tickets").populate("productsOwned").lean() 
     }   
 
     async create(newUser){

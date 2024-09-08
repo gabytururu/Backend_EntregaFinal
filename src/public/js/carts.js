@@ -48,7 +48,22 @@ const quitarDelCarrito = async(cid,pid)=>{
         method:"DELETE",
         headers: {
             'Content-Type': 'application/json',
-        },
+        },   
     })
-    window.location.reload();    
+
+    if(response.status===403 || response.status===401){
+        Swal.fire({
+            icon: "error",
+            title: "Ooops!! No podemos completar la acción",
+            html: `
+                <p>Usted no está autorizado para quitar productos del carrito</p>
+                <p>Sólo los "dueños" del carrito pueden remover productos</p>
+                <h3>¡Contáctanos si consideras que esto es un error!</h3>
+                `,
+          });
+    }
+    
+    if(response.status===200){
+        window.location.reload();    
+    }    
 }

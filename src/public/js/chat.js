@@ -20,7 +20,6 @@ Swal.fire({
         const currentUserEmail = await getSessionData()
         if (mailInput !== currentUserEmail){
             Swal.showValidationMessage('El mail brindado no coincide con el del usuario registrado...!!')
-            //throw new Error('Email mismatch');
         }
         return mailInput
     },

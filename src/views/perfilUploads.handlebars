@@ -2,7 +2,7 @@
 <div class="mainContainer">
     <h1>Documentos de Usuario</h1>
     <hr>
-    <h2>!Hola! {{user.first_name}}, vamos a actualizar tus datos en sistema</h2>
+    <h2>¡Hola {{user.first_name}}!, vamos a actualizar tus datos en sistema</h2>
     <h3 class="subtitle">Por favor proporciona los documentos solicitados a continuación</h3>
                 
     <form action="/api/users/{{user._id}}/documents" method="POST" enctype="multipart/form-data" class="formLogin">
