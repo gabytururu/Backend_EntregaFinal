@@ -7,9 +7,8 @@ let userRol=null;
 const displayUser =async (e)=>{
     e.preventDefault();   
     uid = document.querySelector("#userId").value
-
     try {
-        const response = await fetch(`/api/users/${uid}`)
+        const response = await fetch(`/api/users/${uid}/`)
         const data=  await response.json()
 
         if(response.status===400){
@@ -29,7 +28,7 @@ const displayUser =async (e)=>{
             return
         }
         
-        const {first_name, last_name,email, rol, tickets, productsOwned,last_connection, _id} = data.payload
+        const {fullName,email, rol, tickets, productsOwned,last_connection,id} = data.payload
         const today = new Date()
         const lastConn = new Date(last_connection)
         const daysLastConn= (today - lastConn)/(1000*60*60*24)
@@ -39,8 +38,8 @@ const displayUser =async (e)=>{
         const userDiv = document.querySelector("#userContainer")
         userDiv.innerHTML=`
             <h3>Usuario Solicitado:</h3>
-            <p><strong>Nombre: </strong>${first_name}<p>
-            <p><strong>Apellido: </strong>${last_name}<p>
+            <p><strong>Nombre: </strong>${fullName}<p>
+            
             <p><strong>Email: </strong>${email}<p>
             <p id="rol"><strong>Rol: </strong>${rol}<p>
             <p><strong>Cantidad de compras históricas(tickets): </strong>${tickets.length}<p>
@@ -51,7 +50,7 @@ const displayUser =async (e)=>{
                 `${daysLastConn.toFixed(2)} dias`
             }, | el ${last_connection}
             <p>
-              <p><strong>Id#: </strong>${_id}<p> 
+              <p><strong>Id#: </strong>${id}<p> 
         `
         document.querySelector("#userId").value = "";
         return
@@ -61,8 +60,8 @@ const displayUser =async (e)=>{
             title: "Error de Procesamiento (500)",
             text: "El servidor no pudo procesar su solicitud. Por favor verifique la información e intente nuevamente",
             footer:error.message
-          });
-          return
+        });
+        return
     }
 }
 
@@ -81,15 +80,19 @@ const changeUserRol=async()=>{
             'Content-Type':'application/json'
         }
     })
+    console.log("la response en change user rol: ", response)
     const data = await response.json()
-    if(response.status === 400){
+    console.log("la data en change user rol: ", data)
+
+    if(response.status === 422){
         Swal.fire({
             icon: "error",
             title: "Operación Cancelada",
-            text: "No es posible cambiar el rol a premium. El usuario id# es inválido, o no ha enviado aún toda la documentación requerida.",
+            text: "No es posible cambiar al rol de premium ya que el usuario no ha enviado toda la documentación requerida",
           });
           return
     }
+
 
     userRol =data.payload.rol
     let rolDisplayed = document.querySelector("#rol")
@@ -108,6 +111,7 @@ const changeUserRol=async()=>{
 }
 
 const deleteUser=async()=>{
+   
     if(uid === null){
         Swal.fire({
             icon: "error",
@@ -123,6 +127,7 @@ const deleteUser=async()=>{
                 'Content-Type':'application/json'
             }
         })
+
         if(response.status===400){
             Swal.fire({
                 icon: "error",
@@ -141,6 +146,7 @@ const deleteUser=async()=>{
         }
 
         const data= await response.json()
+
         const email = data.payload.email
         Swal.fire({
             position: "center",
